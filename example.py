@@ -1,11 +1,11 @@
 # Short example how to do Face Recognition
 # Author: Marco Huber, Fraunhofer IGD, 2022
 # marco.huber@igd.fraunhofer.de
+# Co-Author/Modified by: Jieqing Yang
 
 import torch
 import cv2
 import numpy as np
-import wget
 
 # ElasticFace
 from elasticBackbone.iresnet import iresnet100
