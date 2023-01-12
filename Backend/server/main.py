@@ -44,23 +44,26 @@ def authenticateViaFeatureVector():
 
 @app.route('/authenticate/type/picture', methods=['Post'])
 def authenticateViaPicture():
-    data = request.json
-    username = data['username']
-    picture = data['picture']
+    print(request)
+    #data = request
+    # username = data['username']
+    # picture = data['picture']
 
-    databasePicture = database[username]
-    featureVector = CreateFeatureVector(model=Model.POCKET_NET, picture=picture)
+    # print(picture)
 
-    evaluation = Evaluation(databasePicture, featureVector)
-    cosineSimilarity = evaluation.calculateCosineSimilarity()
-    twoPicturesAreSimilarEnough = evaluation.isSimilar(cosineSimilarity, treshhold=2)
+    # databasePicture = database[username]
+    # featureVector = CreateFeatureVector(model=Model.POCKET_NET, picture=picture)
 
-    doorToOpen = DoorOpener()
+    # evaluation = Evaluation(databasePicture, featureVector)
+    # cosineSimilarity = evaluation.calculateCosineSimilarity()
+    # twoPicturesAreSimilarEnough = evaluation.isSimilar(cosineSimilarity, treshhold=2)
 
-    if twoPicturesAreSimilarEnough:
-        doorToOpen.openDoor()
+    # doorToOpen = DoorOpener()
 
-    return jsonify(twoPicturesAreSimilarEnough)
+    # if twoPicturesAreSimilarEnough:
+    #     doorToOpen.openDoor()
+
+    return "true"
 
 
 class Evaluation:

@@ -49,6 +49,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,13 +104,13 @@ public class HomeFragment extends Fragment {
                     URL url = null;
                     try {
                         url = new URL("http://10.0.2.2:5000/authenticate/type/picture");
-                        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
                         StrictMode.setThreadPolicy(policy);
+                        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                         try {
                             urlConnection.setDoOutput(true);
-                            urlConnection.setChunkedStreamingMode(0);
 
                             ObjectOutputStream out = new ObjectOutputStream(urlConnection.getOutputStream());
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -118,11 +119,13 @@ public class HomeFragment extends Fragment {
                             byte[] byteArray = stream.toByteArray();
                             Map<String,Object> outputMap=new HashMap<>();
                             outputMap.put("username","test");
-                            outputMap.put("picture",stream.toString());
-                            out.writeObject(outputMap);
+                            String byteString=Base64.getEncoder().encodeToString(byteArray);
+                            Log.e("input",byteString);
+                            outputMap.put("picture",byteString.getBytes("UTF-8"));
+                            out.writeObject(byteArray);
 
                             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                            Log.e("Input",in.toString());
+
                         } finally {
                             urlConnection.disconnect();
                         }
