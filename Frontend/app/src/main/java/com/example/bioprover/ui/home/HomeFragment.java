@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,12 +42,15 @@ import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
@@ -98,17 +102,24 @@ public class HomeFragment extends Fragment {
                 if (imgCapture.getDrawable() != null){
                     URL url = null;
                     try {
-                        url = new URL("http://www.android.com/");
+                        url = new URL("http://10.0.2.2:5000/authenticate/type/picture");
                         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+                        StrictMode.setThreadPolicy(policy);
                         try {
                             urlConnection.setDoOutput(true);
                             urlConnection.setChunkedStreamingMode(0);
 
-                            OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
+                            ObjectOutputStream out = new ObjectOutputStream(urlConnection.getOutputStream());
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             pictureTake.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
                             byte[] byteArray = stream.toByteArray();
-                            out.write(byteArray);
+                            Map<String,Object> outputMap=new HashMap<>();
+                            outputMap.put("username","test");
+                            outputMap.put("picture",stream.toString());
+                            out.writeObject(outputMap);
 
                             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                             Log.e("Input",in.toString());
