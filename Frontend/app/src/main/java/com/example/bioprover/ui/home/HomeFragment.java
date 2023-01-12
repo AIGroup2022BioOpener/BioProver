@@ -35,10 +35,13 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -98,6 +101,15 @@ public class HomeFragment extends Fragment {
                         url = new URL("http://www.android.com/");
                         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                         try {
+                            urlConnection.setDoOutput(true);
+                            urlConnection.setChunkedStreamingMode(0);
+
+                            OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            pictureTake.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            byte[] byteArray = stream.toByteArray();
+                            out.write(byteArray);
+
                             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                             Log.e("Input",in.toString());
                         } finally {
@@ -165,11 +177,11 @@ public class HomeFragment extends Fragment {
     }
 
 
-    public void grabImage(ImageView imageView)
+    public Bitmap grabImage(ImageView imageView)
     {
         this.getActivity().getContentResolver().notifyChange(mImageUri, null);
         ContentResolver cr = this.getActivity().getContentResolver();
-        Bitmap bitmap;
+        Bitmap bitmap=null;
         try
         {
             bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, mImageUri);
@@ -179,19 +191,20 @@ public class HomeFragment extends Fragment {
         {
 
         }
+        return bitmap;
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
-
+    Bitmap pictureTake=null;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Image_Capture_Code) {
             if (resultCode == RESULT_OK) {
                 //... some code to inflate/create/find appropriate ImageView to place grabbed image
-                this.grabImage(imgCapture);
+                pictureTake=this.grabImage(imgCapture);
                 Log.e("picture","okay");
             } else if (resultCode == RESULT_CANCELED) {
                 Log.e("picture","Failes");
