@@ -1,7 +1,7 @@
 """ Operations """
 import torch
 import torch.nn as nn
-from pocketBackbone import genotypes as gt
+from Backend.featureExtractionAndComparison.pocketBackbone import genotypes as gt
 import torch.nn.functional as F
 
 # ------------------------------ own stuff ----------------------------------

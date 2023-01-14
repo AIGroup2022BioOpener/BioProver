@@ -36,10 +36,7 @@ def detect_face(image):
 # Preprocess image e.g Transformation
 # preprocess method is deprecated
 # exapmle: image = preprocess(image, bbox=boxes[0], landmark=facial5points, image_size=[112, 112]) 
-def preprocess(img, bbox=None, landmark=None, image_size=None):
-    
-    image_size = [112, 112]
-    
+def preprocess(img, bbox=None, landmark=None, image_size=[112, 112]):
     if landmark is not None:
         src = np.array([
             [30.2946, 51.6963],
@@ -47,7 +44,7 @@ def preprocess(img, bbox=None, landmark=None, image_size=None):
             [48.0252, 71.7366],
             [33.5493, 92.3655],
             [62.7299, 92.2041] ], dtype=np.float32)
-        src[:,0] += 8.0
+        src[:, 0] += 8.0
         dst = landmark.astype(np.float32)
 
         tform = transform.SimilarityTransform()

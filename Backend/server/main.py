@@ -1,91 +1,57 @@
 from flask import Flask, jsonify, request
 from flask_restful import Api
 from enum import Enum
-
+from pathlib import Path
+import torch
+import cv2
+import numpy as np
+from Backend.featureExtractionAndComparison.imageProcessing import ImageProcessing
+import os
 
 app = Flask(__name__)
 api = Api(app)
 
-featureVector = {
-    'username': 'test',
-    'featureVector': 'test2'
-}
-
-picture = {
-    'username': 'test',
-    'picture': 'test'
-}
-
-database = {
-    'test': 'test',
-    'test1': 'test2'
-}
-
-
+"""
 @app.route('/authenticate/type/featureVector', methods=['Post'])
-def authenticateViaFeatureVector():
-    data = request.json
-    username = data['username']
-    featureVector = data['featureVector']
+def authenticate_via_feature_vector():
+    print(request)
+    data = request
 
-    databasePicture = database[username]
+    picture_db = imageProcessor.detect_face(cv2.imread(img1_path))
+    embedded_picture_db = imageProcessor.embedd_image(picture_db)
 
-    evaluation = Evaluation(databasePicture, featureVector)
-    cosineSimilarity = evaluation.calculateCosineSimilarity()
-    twoPicturesAreSimilarEnough = evaluation.isSimilar(cosineSimilarity, treshhold=2)
+    picture_for_auth = imageProcessor.detect_face(cv2.imread(img2_path))
+    embedded_image_for_auth = imageProcessor.embedd_image(picture_for_auth)
 
-    doorToOpen = DoorOpener()
-
-    if twoPicturesAreSimilarEnough:
-        doorToOpen.openDoor()
-
-    return jsonify(twoPicturesAreSimilarEnough)
-
+    return jsonify(imageProcessor.is_similar(embedded_picture_db, embedded_image_for_auth))
+"""
 
 @app.route('/authenticate/type/picture', methods=['Post'])
-def authenticateViaPicture():
+def authenticate_via_picture():
     print(request)
-    #data = request
-    # username = data['username']
-    # picture = data['picture']
+    data = request
 
-    # print(picture)
+    path = os.getcwd()
 
-    # databasePicture = database[username]
-    # featureVector = CreateFeatureVector(model=Model.POCKET_NET, picture=picture)
+    img1_path = os.path.join("../featureExtractionAndComparison/Sylvester_Stallone_0002.jpg")
+    img2_path = os.path.join("../featureExtractionAndComparison/Sylvester_Stallone_0005.jpg")
 
-    # evaluation = Evaluation(databasePicture, featureVector)
-    # cosineSimilarity = evaluation.calculateCosineSimilarity()
-    # twoPicturesAreSimilarEnough = evaluation.isSimilar(cosineSimilarity, treshhold=2)
+    pocket_model_path = Path("../featureExtractionAndComparison/PocketNetS.pth")
+    pocket_threshold = 0.19586977362632751
 
-    # doorToOpen = DoorOpener()
+    imageProcessor = ImageProcessing(
+        model_path=os.path.join(path, pocket_model_path),
+        threshold=pocket_threshold)
 
-    # if twoPicturesAreSimilarEnough:
-    #     doorToOpen.openDoor()
 
+    picture_db = imageProcessor.detect_face(cv2.imread(img1_path))
+    embedded_picture_db = imageProcessor.embedd_image(picture_db)
+
+    picture_for_auth = imageProcessor.detect_face(cv2.imread(img2_path))
+    embedded_image_for_auth = imageProcessor.embedd_image(picture_for_auth)
+
+    print(imageProcessor.is_similar(embedded_picture_db, embedded_image_for_auth))
     return "true"
-
-
-class Evaluation:
-    def __init__(self, featureVectorForAuthentification, featureVectorFromDatabase):
-        self.featureVectorForAuthentification = featureVectorForAuthentification
-        self.featureVectorFromDatabase = featureVectorFromDatabase
-
-    def calculateCosineSimilarity(self):
-        return 3
-
-    def isSimilar(self, similarityScore=5 ,treshhold=3):
-        return True if similarityScore >= treshhold else False
-
-
-
-class CreateFeatureVector():
-    def __init__(self, model, picture):
-        self.model = model
-        self.picture = picture
-
-    def getFeatureVector(self):
-        return 5
 
 
 class DoorOpener:
@@ -101,3 +67,12 @@ class Model(Enum):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+    pocket_model_path = "PocketNetS.pth"
+    pocket_threshold = 0.19586977362632751
+
+    imageProcessor = ImageProcessing(threshold=pocket_threshold)
+
+    # Image loading &  preparing
+    img1_path = "Sylvester_Stallone_0002.jpg"
+    img2_path = "Sylvester_Stallone_0005.jpg"
