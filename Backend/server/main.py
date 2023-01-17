@@ -44,24 +44,13 @@ def authenticateViaFeatureVector():
 
 @app.route('/authenticate/type/picture', methods=['Post'])
 def authenticateViaPicture():
-    print(request)
-    #data = request
-    # username = data['username']
-    # picture = data['picture']
+    data = request.json
+    username = "test"
+    print("hello---------------------------------")
+    print(data)
+    picture = data['image']
 
-    # print(picture)
-
-    # databasePicture = database[username]
-    # featureVector = CreateFeatureVector(model=Model.POCKET_NET, picture=picture)
-
-    # evaluation = Evaluation(databasePicture, featureVector)
-    # cosineSimilarity = evaluation.calculateCosineSimilarity()
-    # twoPicturesAreSimilarEnough = evaluation.isSimilar(cosineSimilarity, treshhold=2)
-
-    # doorToOpen = DoorOpener()
-
-    # if twoPicturesAreSimilarEnough:
-    #     doorToOpen.openDoor()
+    # print(data)
 
     return "true"
 
@@ -100,4 +89,4 @@ class Model(Enum):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
