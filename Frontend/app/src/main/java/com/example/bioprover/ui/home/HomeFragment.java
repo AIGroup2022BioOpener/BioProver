@@ -53,9 +53,20 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import android.graphics.Bitmap;
+
+
 public class HomeFragment extends Fragment {
 
-
+    Bitmap pictureTake=null;
     private FragmentHomeBinding binding;
     private ImageView imgCapture;
     private static final int Image_Capture_Code = 121;
@@ -100,38 +111,55 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                debug("button pressed");
                 if (imgCapture.getDrawable() != null){
-                    URL url = null;
+//                    URL url = null;
+                    debug("image exists");
+//                    String url = "http://10.0.2.2:5000/authenticate/type/picture";
+                    String url = "http://192.168.233.1:5000/authenticate/type/picture";
+                    HttpURLConnection connection = null;
                     try {
-                        url = new URL("http://10.0.2.2:5000/authenticate/type/picture");
+//                        url = new URL("http://10.0.2.2:5000/authenticate/type/picture");
 
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
                         StrictMode.setThreadPolicy(policy);
-                        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                        try {
-                            urlConnection.setDoOutput(true);
+//                        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-                            ObjectOutputStream out = new ObjectOutputStream(urlConnection.getOutputStream());
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            pictureTake.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                        String base64 = Base64.getEncoder().encodeToString(array);
+                        debug("making data");
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        //takes picture puts it into outputstream
+                        pictureTake.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
 
-                            byte[] byteArray = stream.toByteArray();
-                            Map<String,Object> outputMap=new HashMap<>();
-                            outputMap.put("username","test");
-                            String byteString=Base64.getEncoder().encodeToString(byteArray);
-                            Log.e("input",byteString);
-                            outputMap.put("picture",byteString.getBytes("UTF-8"));
-                            out.writeObject(byteArray);
+                        byte[] byteArray = byteArrayOutputStream.toByteArray();
+                        String encoded = Base64.getEncoder().encodeToString(byteArray);
 
-                            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                        //make json object 'data'
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("image", encoded);
+                        byte[] data = jsonObject.toString().getBytes("UTF-8");
 
-                        } finally {
-                            urlConnection.disconnect();
-                        }
+
+
+                        connection = (HttpURLConnection) new URL(url).openConnection();
+
+                        connection.setRequestMethod("POST");
+
+                        connection.setRequestProperty("Content-Type", "application/json");
+
+                        connection.setRequestProperty("Content-Length", Integer.toString(data.length));
+                        connection.setDoOutput(true);
+//                        debug(data);
+                        connection.getOutputStream().write(data);
+                        debug("test after connection4");
+                        InputStream inputStream = connection.getInputStream();
+                        debug(inputStream.toString());
+                        debug("test after connection5");
+
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
 
@@ -143,6 +171,58 @@ public class HomeFragment extends Fragment {
 
 
     }
+
+//    private void httpCall(){
+//        ObjectMapper mapper = new ObjectMapper();
+//
+//        OkHttpClient client = new OkHttpClient();
+//
+//        Request request = new Request.Builder()
+//           .url("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY")
+//           .build(); // defaults to GET
+//
+//        Response response = client.newCall(request).execute();
+//
+//        APOD apod = mapper.readValue(response.body().byteStream(), APOD.class);
+//
+//        System.out.println(apod.title);
+//
+//    }
+
+//    public class Example {
+//        public void sendImage(Bitmap image, String url) throws JSONException {
+//
+//            HttpURLConnection connection = null;
+//
+//            try {
+//                String base64 = Base64.getEncoder().encodeToString(array);
+//                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//                image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+//                byte[] byteArray = byteArrayOutputStream .toByteArray();
+//                String encoded = Base64.encodeToString(byteArray);
+//                byte[] data = jsonObject.toString().getBytes("UTF-8");
+//                JSONObject jsonObject = new JSONObject();
+//                jsonObject.put("image", encoded);
+//
+//                connection = (HttpURLConnection) new URL(url).openConnection();
+//                connection.setRequestMethod("POST");
+//                connection.setRequestProperty("Content-Type", "application/json");
+//                connection.setRequestProperty("Content-Length", Integer.toString(data.length));
+//                connection.setDoOutput(true);
+//                connection.getOutputStream().write(data);
+//                InputStream inputStream = connection.getInputStream();
+//                // Do something with the response here
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            } finally {
+//                if (connection != null) {
+//                    connection.disconnect();
+//                }
+//            }
+//        }
+//    }
 
 
     private File createTemporaryFile(String part, String ext) throws Exception
@@ -212,7 +292,12 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-    Bitmap pictureTake=null;
+
+    public void debug(String msg){
+        Log.e("picture",msg);
+        Toast.makeText(this.getContext(),msg,Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Image_Capture_Code) {
