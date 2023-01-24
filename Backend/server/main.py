@@ -1,55 +1,86 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request, session
 from flask_restful import Api
 from enum import Enum
 from pathlib import Path
-import torch
 import cv2
-import numpy as np
 from Backend.featureExtractionAndComparison.imageProcessing import ImageProcessing
+from Backend.assets.pictureEncoding import PictureEncoding
 import os
-import base64
-import sys
 import json
 
 app = Flask(__name__)
 api = Api(app)
 
+
+def store_data(user, image_path):
+    session["user"] = user
+    session["image_path"] = image_path
+
+
+def get_data(user):
+    if session["user"] == user:
+        return session["image_path"]
+    else:
+        return False
+
+
 @app.route('/authenticate/type/picture', methods=['Post'])
 def authenticate_via_picture():
-    data = request.json
-    picture_as_byte_string = data["image"]
+    try:
+        data = request.json
+        picture_as_byte_string = data["image"]
 
-    # picture_as_byte_string = open("./pictureData.txt").read()
+        image_db = get_data(data["user"])
 
-    imageToVerify = "../featureExtractionAndComparison/imageToVerify.jpg"
-    with open(imageToVerify, "wb") as fh:
-        fh.write(base64.b64decode(picture_as_byte_string))
+        if not image_db:
+            return json.dumps({'error': "userNotExisting"})
 
-    path = os.getcwd()
+        # picture_as_byte_string = open("./pictureData.txt").read()
 
-    img1_path = os.path.join("../featureExtractionAndComparison/Sylvester_Stallone_0002.jpg")
-    img2_path = os.path.join("../featureExtractionAndComparison/Sylvester_Stallone_0005.jpg")
-    img3_path = os.path.join("../featureExtractionAndComparison/Pamela_Anderson_0003.jpg")
+        image_to_verify = "../featureExtractionAndComparison/imageToVerify.jpg"
+        PictureEncoding.base64_to_image(base64_string=picture_as_byte_string, image_path=image_to_verify)
 
-    pocket_model_path = Path("../featureExtractionAndComparison/PocketNetS.pth")
-    pocket_threshold = 0.19586977362632751
+        path = os.getcwd()
 
-    imageProcessor = ImageProcessing(
-        model_path=os.path.join(path, pocket_model_path),
-        threshold=pocket_threshold)
+        img1_path = os.path.join("../featureExtractionAndComparison/Sylvester_Stallone_0002.jpg")
+        img2_path = os.path.join("../featureExtractionAndComparison/Sylvester_Stallone_0005.jpg")
+        img3_path = os.path.join("../featureExtractionAndComparison/Pamela_Anderson_0003.jpg")
 
-    picture_db = imageProcessor.detect_face(cv2.imread(imageToVerify))
-    embedded_picture_db = imageProcessor.embedd_image(picture_db)
+        pocket_model_path = Path("../featureExtractionAndComparison/PocketNetS.pth")
+        pocket_threshold = 0.19586977362632751
 
-    picture_for_auth = imageProcessor.detect_face(cv2.imread(img3_path))
-    embedded_image_for_auth = imageProcessor.embedd_image(picture_for_auth)
+        image_processor = ImageProcessing(
+            model_path=os.path.join(path, pocket_model_path),
+            threshold=pocket_threshold)
 
-    return json.dumps({"isSimilar": str(imageProcessor.is_similar(embedded_picture_db, embedded_image_for_auth))})
+        picture_db = image_processor.detect_face(cv2.imread(image_db))
+        embedded_picture_db = image_processor.embedd_image(picture_db)
+
+        picture_for_auth = image_processor.detect_face(cv2.imread(image_to_verify))
+        embedded_image_for_auth = image_processor.embedd_image(picture_for_auth)
+
+        return json.dumps({"isSimilar": str(image_processor.is_similar(embedded_picture_db, embedded_image_for_auth))})
+
+    except Exception as error:
+        return json.dumps({'error': error})
 
 
-class DoorOpener:
-    def openDoor(self):
-        return True
+@app.route('/register', methods=['Post'])
+def register():
+    try:
+        data = request.json
+        picture_as_byte_string = data["image"]
+        user = data["user"]
+
+        image_for_database = "../featureExtractionAndComparison/imageForDatabase.jpg"
+        PictureEncoding.base64_to_image(base64_string=picture_as_byte_string, image_path=image_for_database)
+
+        store_data(user=user, image_path=image_for_database)
+
+        return json.dumps("success")
+
+    except Exception as error:
+        return json.dumps({'error': error})
 
 
 class Model(Enum):
@@ -59,13 +90,5 @@ class Model(Enum):
 
 
 if __name__ == '__main__':
+    app.secret_key = "seeeecret"
     app.run(debug=True)
-
-    pocket_model_path = "PocketNetS.pth"
-    pocket_threshold = 0.19586977362632751
-
-    imageProcessor = ImageProcessing(threshold=pocket_threshold)
-
-    # Image loading &  preparing
-    img1_path = "Sylvester_Stallone_0002.jpg"
-    img2_path = "Sylvester_Stallone_0005.jpg"
