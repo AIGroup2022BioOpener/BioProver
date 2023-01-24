@@ -76,6 +76,15 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         currentActivity=this.getActivity();
+        final Button enrollBtn = binding.Enroll;
+
+        enrollBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
 
         return root;
     }

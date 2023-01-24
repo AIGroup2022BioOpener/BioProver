@@ -8,13 +8,24 @@
 
 
     <Button
+        android:id="@+id/Enroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Enroll"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/UpLoad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upload"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.827"
+        app:layout_constraintHorizontal_bias="0.949"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/Photobutton"
         app:layout_constraintVertical_bias="0.0" />
@@ -25,9 +36,9 @@
         android:layout_height="wrap_content"
         android:text="Take Picture"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.174"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/UpLoad"
+        app:layout_constraintHorizontal_bias="0.451"
+        app:layout_constraintStart_toEndOf="@+id/Enroll"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.976" />
 
@@ -43,11 +54,12 @@
 
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="198dp"
         android:layout_height="56dp"
-        android:orientation="horizontal"
         android:layout_gravity="top|left"
-        android:gravity="start|top">
+        android:gravity="start|top"
+        android:orientation="horizontal">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip4"
