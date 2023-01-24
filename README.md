@@ -13,6 +13,18 @@ pip install -r requirements.txt
 cd Backend/server
 python3 main.py
 ```
+If you have problems importing classes within the same project
+```
+Linux
+export PYTHONPATH="${PYTHONPATH}:/path/to/your/project/"
+
+Windows:
+set PYTHONPATH=%PYTHONPATH%;C:\path\to\your\project\
+
+```
+
+
+
 
 If the app shall be accessible within the network, set the host to 0.0.0.0
 ```

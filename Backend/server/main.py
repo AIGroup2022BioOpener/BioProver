@@ -7,34 +7,29 @@ import cv2
 import numpy as np
 from Backend.featureExtractionAndComparison.imageProcessing import ImageProcessing
 import os
+import base64
+import sys
+import json
 
 app = Flask(__name__)
 api = Api(app)
 
-"""
-@app.route('/authenticate/type/featureVector', methods=['Post'])
-def authenticate_via_feature_vector():
-    print(request)
-    data = request
-
-    picture_db = imageProcessor.detect_face(cv2.imread(img1_path))
-    embedded_picture_db = imageProcessor.embedd_image(picture_db)
-
-    picture_for_auth = imageProcessor.detect_face(cv2.imread(img2_path))
-    embedded_image_for_auth = imageProcessor.embedd_image(picture_for_auth)
-
-    return jsonify(imageProcessor.is_similar(embedded_picture_db, embedded_image_for_auth))
-"""
-
 @app.route('/authenticate/type/picture', methods=['Post'])
 def authenticate_via_picture():
-    print(request)
-    data = request
+    data = request.json
+    picture_as_byte_string = data["image"]
+
+    # picture_as_byte_string = open("./pictureData.txt").read()
+
+    imageToVerify = "../featureExtractionAndComparison/imageToVerify.jpg"
+    with open(imageToVerify, "wb") as fh:
+        fh.write(base64.b64decode(picture_as_byte_string))
 
     path = os.getcwd()
 
     img1_path = os.path.join("../featureExtractionAndComparison/Sylvester_Stallone_0002.jpg")
     img2_path = os.path.join("../featureExtractionAndComparison/Sylvester_Stallone_0005.jpg")
+    img3_path = os.path.join("../featureExtractionAndComparison/Pamela_Anderson_0003.jpg")
 
     pocket_model_path = Path("../featureExtractionAndComparison/PocketNetS.pth")
     pocket_threshold = 0.19586977362632751
@@ -43,15 +38,13 @@ def authenticate_via_picture():
         model_path=os.path.join(path, pocket_model_path),
         threshold=pocket_threshold)
 
-
-    picture_db = imageProcessor.detect_face(cv2.imread(img1_path))
+    picture_db = imageProcessor.detect_face(cv2.imread(imageToVerify))
     embedded_picture_db = imageProcessor.embedd_image(picture_db)
 
-    picture_for_auth = imageProcessor.detect_face(cv2.imread(img2_path))
+    picture_for_auth = imageProcessor.detect_face(cv2.imread(img3_path))
     embedded_image_for_auth = imageProcessor.embedd_image(picture_for_auth)
 
-    print(imageProcessor.is_similar(embedded_picture_db, embedded_image_for_auth))
-    return "true"
+    return json.dumps({"isSimilar": str(imageProcessor.is_similar(embedded_picture_db, embedded_image_for_auth))})
 
 
 class DoorOpener:

@@ -35,6 +35,7 @@ class ImageProcessing():
         # Detect all faces in PIL image and return bounding boxes and optional facial landmarks.
         # given raw input images types: PIL image or list of PIL images, numpy.ndarray (uint8)
         boxes, probs, landmarks = mtcnn.detect(cv2_image, landmarks=True)
+        print("b", boxes, "p", probs, "l", landmarks)
         facial5points = landmarks[0]
 
         # transforms image to match the landmarks with reference landmarks
