@@ -3,8 +3,10 @@ package com.example.bioprover.ui.home;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -97,6 +99,7 @@ public class HomeFragment extends Fragment {
                 });
 
             }
+
         });
 
         final Button UploadButton = binding.UpLoad;
@@ -160,7 +163,7 @@ public class HomeFragment extends Fragment {
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
-                    executePytorch();
+                    //executePytorch();
                 }
 
 
@@ -232,6 +235,7 @@ public class HomeFragment extends Fragment {
 
         }
         this.faceBitmap=bitmap;
+
         return bitmap;
     }
     @Override
@@ -261,13 +265,12 @@ public class HomeFragment extends Fragment {
 
             }
         }
+        //executePytorch(); //TODO:reactivate
     }
 
-    public void test(){
-
-    }
 
     public float[] executePytorch() {
+        debug("running model");
         Bitmap bitmap = null;
         Module module = null;
         try {
@@ -276,7 +279,9 @@ public class HomeFragment extends Fragment {
             bitmap = faceBitmap;
             // loading serialized torchscript module from packaged into app android asset model.pt,
             // app/src/model/assets/model.pt
-            module = LiteModuleLoader.load( "model.pt");
+            String moduleFilePath = assetFilePath(getContext(),"model.pt");
+            debug(moduleFilePath);
+            module = LiteModuleLoader.load( moduleFilePath);
         } catch (Exception e) {
             Log.e("PytorchHelloWorld", "Error reading assets", e);
           return null;
@@ -295,6 +300,7 @@ public class HomeFragment extends Fragment {
 
         // getting tensor content as java array of floats
         final float[] scores = outputTensor.getDataAsFloatArray();
+        debug(scores.toString());
         return scores;
 
         // searching for the index with maximum score
@@ -308,6 +314,25 @@ public class HomeFragment extends Fragment {
 //        }
 
 
+    }
+
+    public static String assetFilePath(Context context, String assetName) throws IOException {
+        File file = new File(context.getFilesDir(), assetName);
+        if (file.exists() && file.length() > 0) {
+            return file.getAbsolutePath();
+        }
+
+        try (InputStream is = context.getAssets().open(assetName)) {
+            try (OutputStream os = new FileOutputStream(file)) {
+                byte[] buffer = new byte[4 * 1024];
+                int read;
+                while ((read = is.read(buffer)) != -1) {
+                    os.write(buffer, 0, read);
+                }
+                os.flush();
+            }
+            return file.getAbsolutePath();
+        }
     }
 
 
