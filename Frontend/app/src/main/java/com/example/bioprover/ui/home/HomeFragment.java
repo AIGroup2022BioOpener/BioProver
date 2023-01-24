@@ -88,7 +88,52 @@ public class HomeFragment extends Fragment {
                 } else if (faceBitmap == null ){
                     Toast.makeText(root.getContext(), "Please take a picture", Toast.LENGTH_SHORT).show();
                 } else if (!username.getText().toString().isEmpty() && faceBitmap != null) {
-                    System.out.println("User enrolled");
+                    String url = "http://10.0.2.2:5000/register";
+                    HttpURLConnection connection = null;
+                    debug("enrolling user");
+                    try {
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+                        StrictMode.setThreadPolicy(policy);
+                        debug("making data");
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        //takes picture puts it into outputstream
+                        faceBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+
+                        byte[] byteArray = byteArrayOutputStream.toByteArray();
+                        String encoded = Base64.getEncoder().encodeToString(byteArray);
+
+                        //make json object 'data'
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("image", encoded);
+                        jsonObject.put("user", username.getText().toString());
+                        byte[] data = jsonObject.toString().getBytes("UTF-8");
+
+
+
+                        connection = (HttpURLConnection) new URL(url).openConnection();
+
+                        connection.setRequestMethod("POST");
+
+                        connection.setRequestProperty("Content-Type", "application/json");
+
+                        connection.setRequestProperty("Content-Length", Integer.toString(data.length));
+                        connection.setDoOutput(true);
+//                        debug(data);
+                        connection.getOutputStream().write(data);
+                        debug("test after connection4");
+                        InputStream inputStream = connection.getInputStream();
+                        debug(inputStream.toString());
+                        debug("test after connection5");
+
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+
                 }
             }
         });
@@ -124,15 +169,15 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 debug("button pressed");
-                if (imgCapture.getDrawable() == null){
-                    debug("No Image");
+                if (imgCapture.getDrawable() == null || binding.username.getText().toString().isEmpty()){
+                    debug("No Image || no username");
                     return;
                 }
 
 //                    URL url = null;
                     debug("image exists");
-//                    String url = "http://10.0.2.2:5000/authenticate/type/picture";
-                    String url = "http://192.168.233.1:5000/authenticate/type/picture";
+                    String url = "http://10.0.2.2:5000/authenticate/type/picture";
+//                    String url = "http://192.168.233.1:5000/authenticate/type/picture";
                     HttpURLConnection connection = null;
                     try {
 //                        url = new URL("http://10.0.2.2:5000/authenticate/type/picture");
@@ -154,6 +199,7 @@ public class HomeFragment extends Fragment {
                         //make json object 'data'
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("image", encoded);
+                        jsonObject.put("user", binding.username.getText().toString());
                         byte[] data = jsonObject.toString().getBytes("UTF-8");
 
 
