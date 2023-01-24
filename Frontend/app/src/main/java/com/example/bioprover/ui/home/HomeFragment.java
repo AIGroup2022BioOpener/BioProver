@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -17,17 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.bioprover.R;
 import com.example.bioprover.databinding.FragmentHomeBinding;
@@ -35,33 +30,27 @@ import com.example.bioprover.databinding.FragmentHomeBinding;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Console;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.graphics.Bitmap;
+
+import org.pytorch.IValue;
+import org.pytorch.LiteModuleLoader;
+import org.pytorch.MemoryFormat;
+import org.pytorch.Module;
+import org.pytorch.Tensor;
+import org.pytorch.torchvision.TensorImageUtils;
 
 
 public class HomeFragment extends Fragment {
@@ -72,6 +61,11 @@ public class HomeFragment extends Fragment {
     private static final int Image_Capture_Code = 121;
     private final static int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private Uri mImageUri;
+    private Bitmap faceBitmap;
+    private Module module;
+
+
+
 
     private Activity currentActivity=null;
 
@@ -112,7 +106,11 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 debug("button pressed");
-                if (imgCapture.getDrawable() != null){
+                if (imgCapture.getDrawable() == null){
+                    debug("No Image");
+                    return;
+                }
+
 //                    URL url = null;
                     debug("image exists");
 //                    String url = "http://10.0.2.2:5000/authenticate/type/picture";
@@ -162,67 +160,15 @@ public class HomeFragment extends Fragment {
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
-
+                    executePytorch();
                 }
 
-            }
+
         });
 
 
 
     }
-
-//    private void httpCall(){
-//        ObjectMapper mapper = new ObjectMapper();
-//
-//        OkHttpClient client = new OkHttpClient();
-//
-//        Request request = new Request.Builder()
-//           .url("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY")
-//           .build(); // defaults to GET
-//
-//        Response response = client.newCall(request).execute();
-//
-//        APOD apod = mapper.readValue(response.body().byteStream(), APOD.class);
-//
-//        System.out.println(apod.title);
-//
-//    }
-
-//    public class Example {
-//        public void sendImage(Bitmap image, String url) throws JSONException {
-//
-//            HttpURLConnection connection = null;
-//
-//            try {
-//                String base64 = Base64.getEncoder().encodeToString(array);
-//                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-//                byte[] byteArray = byteArrayOutputStream .toByteArray();
-//                String encoded = Base64.encodeToString(byteArray);
-//                byte[] data = jsonObject.toString().getBytes("UTF-8");
-//                JSONObject jsonObject = new JSONObject();
-//                jsonObject.put("image", encoded);
-//
-//                connection = (HttpURLConnection) new URL(url).openConnection();
-//                connection.setRequestMethod("POST");
-//                connection.setRequestProperty("Content-Type", "application/json");
-//                connection.setRequestProperty("Content-Length", Integer.toString(data.length));
-//                connection.setDoOutput(true);
-//                connection.getOutputStream().write(data);
-//                InputStream inputStream = connection.getInputStream();
-//                // Do something with the response here
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            } finally {
-//                if (connection != null) {
-//                    connection.disconnect();
-//                }
-//            }
-//        }
-//    }
 
 
     private File createTemporaryFile(String part, String ext) throws Exception
@@ -285,6 +231,7 @@ public class HomeFragment extends Fragment {
         {
 
         }
+        this.faceBitmap=bitmap;
         return bitmap;
     }
     @Override
@@ -315,4 +262,55 @@ public class HomeFragment extends Fragment {
             }
         }
     }
+
+    public void test(){
+
+    }
+
+    public float[] executePytorch() {
+        Bitmap bitmap = null;
+        Module module = null;
+        try {
+            // creating bitmap from packaged into app android asset 'image.jpg',
+            // app/src/main/assets/image.jpg
+            bitmap = faceBitmap;
+            // loading serialized torchscript module from packaged into app android asset model.pt,
+            // app/src/model/assets/model.pt
+            module = LiteModuleLoader.load( "model.pt");
+        } catch (Exception e) {
+            Log.e("PytorchHelloWorld", "Error reading assets", e);
+          return null;
+        }
+
+        // showing image on UI
+//        ImageView imageView = findViewById(R.id.image);
+//        imageView.setImageBitmap(bitmap);
+
+        // preparing input tensor
+        final Tensor inputTensor = TensorImageUtils.bitmapToFloat32Tensor(bitmap,
+                TensorImageUtils.TORCHVISION_NORM_MEAN_RGB, TensorImageUtils.TORCHVISION_NORM_STD_RGB, MemoryFormat.CHANNELS_LAST);
+
+        // running the model
+        final Tensor outputTensor = module.forward(IValue.from(inputTensor)).toTensor();
+
+        // getting tensor content as java array of floats
+        final float[] scores = outputTensor.getDataAsFloatArray();
+        return scores;
+
+        // searching for the index with maximum score
+//        float maxScore = -Float.MAX_VALUE;
+//        int maxScoreIdx = -1;
+//        for (int i = 0; i < scores.length; i++) {
+//            if (scores[i] > maxScore) {
+//                maxScore = scores[i];
+//                maxScoreIdx = i;
+//            }
+//        }
+
+
+    }
+
+
 }
+
+
