@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -64,7 +65,6 @@ public class HomeFragment extends Fragment {
     private final static int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private Uri mImageUri;
     private Bitmap faceBitmap;
-    private Module module;
 
 
 
@@ -79,11 +79,17 @@ public class HomeFragment extends Fragment {
 
         currentActivity=this.getActivity();
         final Button enrollBtn = binding.Enroll;
-
+        final EditText username = binding.username;
         enrollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (username.getText().toString().isEmpty()) {
+                    Toast.makeText(root.getContext(), "Please type in a username", Toast.LENGTH_SHORT).show();
+                } else if (faceBitmap == null ){
+                    Toast.makeText(root.getContext(), "Please take a picture", Toast.LENGTH_SHORT).show();
+                } else if (!username.getText().toString().isEmpty() && faceBitmap != null) {
+                    System.out.println("User enrolled");
+                }
             }
         });
 
