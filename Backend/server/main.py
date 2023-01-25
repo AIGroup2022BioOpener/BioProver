@@ -1,4 +1,4 @@
-from flask import Flask, request, session
+from flask import Flask, request, session, redirect, url_for
 from flask_restful import Api
 from enum import Enum
 from pathlib import Path
@@ -7,19 +7,19 @@ from Backend.featureExtractionAndComparison.imageProcessing import ImageProcessi
 from Backend.assets.pictureEncoding import PictureEncoding
 import os
 import json
+from cache import cache
 
 app = Flask(__name__)
 api = Api(app)
 
 
 def store_data(user, image_path):
-    session["user"] = user
-    session["image_path"] = image_path
+    cache.set(user, image_path)
 
 
 def get_data(user):
-    if session["user"] == user:
-        return session["image_path"]
+    if cache.get(user):
+        return cache.get(user)
     else:
         return False
 
@@ -62,7 +62,7 @@ def authenticate_via_picture():
         return json.dumps({"isSimilar": str(image_processor.is_similar(embedded_picture_db, embedded_image_for_auth))})
 
     except Exception as error:
-        return json.dumps({'error': error})
+        return json.dumps({'error': str(error)})
 
 
 @app.route('/register', methods=['Post'])
@@ -80,7 +80,7 @@ def register():
         return json.dumps("success")
 
     except Exception as error:
-        return json.dumps({'error': error})
+        return json.dumps({'error': str(error)})
 
 
 class Model(Enum):
@@ -91,4 +91,5 @@ class Model(Enum):
 
 if __name__ == '__main__':
     app.secret_key = "seeeecret"
-    app.run(debug=True)
+    cache.init_app(app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Path('/tmp')})
+    app.run(host="0.0.0.0")
