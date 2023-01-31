@@ -1,0 +1,101 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.bioprover"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="29"
+8-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="31" />
+9-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml
+10
+11    <uses-feature
+11-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:5:5-7:35
+12        android:name="android.hardware.camera"
+12-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:6:9-47
+13        android:required="true" />
+13-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:7:9-32
+14
+15    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+15-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:9:5-81
+15-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:9:22-78
+16    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+16-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:10:5-80
+16-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:10:22-77
+17    <uses-permission android:name="android.permission.INTERNET" />
+17-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:11:5-67
+17-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:11:22-64
+18
+19    <application
+19-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:13:5-49:19
+20        android:allowBackup="true"
+20-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:14:9-35
+21        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+21-->[androidx.core:core:1.5.0] C:\Users\Gokay\.gradle\caches\transforms-2\files-2.1\cc5e9dcdc56dc39042f72c501235e83f\core-1.5.0\AndroidManifest.xml:24:18-86
+22        android:debuggable="true"
+23        android:extractNativeLibs="false"
+24        android:icon="@mipmap/ic_launcher"
+24-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:15:9-43
+25        android:label="@string/app_name"
+25-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:16:9-41
+26        android:roundIcon="@mipmap/ic_launcher_round"
+26-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:17:9-54
+27        android:supportsRtl="true"
+27-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:18:9-35
+28        android:testOnly="true"
+29        android:theme="@style/Theme.Bioprover"
+29-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:19:9-47
+30        android:usesCleartextTraffic="true" >
+30-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:20:9-44
+31        <activity
+31-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:21:9-31:20
+32            android:name="com.example.bioprover.HomeActivity"
+32-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:22:13-41
+33            android:exported="true"
+33-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:23:13-36
+34            android:label="@string/app_name"
+34-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:24:13-45
+35            android:theme="@style/splashScreenTheme" >
+35-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:25:13-53
+36            <intent-filter>
+36-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:26:9-30:25
+37                <action android:name="android.intent.action.MAIN" />
+37-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:27:13-65
+37-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:27:21-62
+38
+39                <category android:name="android.intent.category.LAUNCHER" />
+39-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:29:13-73
+39-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:29:23-70
+40            </intent-filter>
+41        </activity>
+42
+43        <provider
+44            android:name="androidx.core.content.FileProvider"
+44-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:34:13-62
+45            android:authorities="com.example.bioprover.provider"
+45-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:35:13-60
+46            android:exported="false"
+46-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:36:13-37
+47            android:grantUriPermissions="true" >
+47-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:37:13-47
+48            <meta-data
+48-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:38:13-40:58
+49                android:name="android.support.FILE_PROVIDER_PATHS"
+49-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:39:17-67
+50                android:resource="@xml/provider_paths" />
+50-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:40:17-55
+51        </provider>
+52
+53        <activity
+53-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:43:9-48:20
+54            android:name="com.example.bioprover.MainActivity"
+54-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:44:13-41
+55            android:exported="false"
+55-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:45:13-37
+56            android:label="@string/app_name" >
+56-->E:\Uni\Semester 7\Ambient Intelligence\BioProver\Frontend\app\src\main\AndroidManifest.xml:46:13-45
+57        </activity>
+58    </application>
+59
+60</manifest>

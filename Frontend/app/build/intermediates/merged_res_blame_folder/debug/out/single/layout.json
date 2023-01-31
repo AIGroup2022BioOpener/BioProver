@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\fragment_notifications.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\fragment_notifications.xml"
+    },
+    {
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\dropdown_item.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\dropdown_item.xml"
+    },
+    {
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_home.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\activity_home.xml"
+    },
+    {
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_main.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\fragment_home.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\fragment_dashboard.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\fragment_dashboard.xml"
+    }
+]
