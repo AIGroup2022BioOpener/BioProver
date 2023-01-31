@@ -3,4 +3,10 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <string-array name="models">
+        <item>PocketNet</item>
+        <item>MixFaceNets</item>
+        <item>ElasticFace</item>
+    </string-array>
 </resources>

@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -65,6 +67,7 @@ public class HomeFragment extends Fragment {
     private final static int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private Uri mImageUri;
     private Bitmap faceBitmap;
+    private String currentModel;
 
 
 
@@ -77,7 +80,9 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        currentActivity=this.getActivity();
+        String[] visibilities = getResources().getStringArray(R.array.models);
+
+        currentActivity = this.getActivity();
         final Button enrollBtn = binding.Enroll;
         final EditText username = binding.username;
         enrollBtn.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +97,8 @@ public class HomeFragment extends Fragment {
                     HttpURLConnection connection = null;
                     debug("enrolling user");
                     try {
+                        currentModel = binding.autoCompleteTextView.getText().toString();
+
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
                         StrictMode.setThreadPolicy(policy);
@@ -180,6 +187,7 @@ public class HomeFragment extends Fragment {
 //                    String url = "http://192.168.233.1:5000/authenticate/type/picture";
                     HttpURLConnection connection = null;
                     try {
+                        currentModel = binding.autoCompleteTextView.getText().toString();
 //                        url = new URL("http://10.0.2.2:5000/authenticate/type/picture");
 
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -395,7 +403,22 @@ public class HomeFragment extends Fragment {
             return file.getAbsolutePath();
         }
     }
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        //Visibilies are the different polling types
+        String[] visibilities = getResources().getStringArray(R.array.models);
+
+        //Creates an Array Adapter with the visibilities
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getContext(), R.layout.dropdown_item, visibilities);
+
+        //Gets the view of the drop down menu with the different visibilities
+        AutoCompleteTextView dropDownMenu = getView().findViewById(R.id.autoCompleteTextView);
+
+        //Sets the created Array Adapter to the Dropdown Menu
+        dropDownMenu.setAdapter(arrayAdapter);
+    }
 
 }
 
