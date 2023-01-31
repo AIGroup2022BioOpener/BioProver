@@ -1,8 +1,8 @@
 """ CNN cell for network augmentation """
 import torch
 import torch.nn as nn
-from Backend.featureExtractionAndComparison.pocketBackbone import ops
-from Backend.featureExtractionAndComparison.pocketBackbone import genotypes as gt
+from featureExtractionAndComparison.pocketBackbone import ops
+from featureExtractionAndComparison.pocketBackbone import genotypes as gt
 
 
 class AugmentCell(nn.Module):

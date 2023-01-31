@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -80,6 +82,13 @@ public class HomeFragment extends Fragment {
         currentActivity=this.getActivity();
         final Button enrollBtn = binding.Enroll;
         final EditText username = binding.username;
+        TextView loginStatus = (TextView) currentActivity.findViewById(R.id.login_status);
+
+        /**
+         * OnClick functionality for the enroll button.
+         * Requires photo to be taken first.
+         * Takes the image, transforms it into byte array, then processes the result.
+         */
         enrollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,51 +97,47 @@ public class HomeFragment extends Fragment {
                 } else if (faceBitmap == null ){
                     Toast.makeText(root.getContext(), "Please take a picture", Toast.LENGTH_SHORT).show();
                 } else if (!username.getText().toString().isEmpty() && faceBitmap != null) {
-                    String url = "http://10.0.2.2:5000/register";
+                    String url = "http://192.168.50.67:5000/register";
                     HttpURLConnection connection = null;
                     debug("enrolling user");
                     try {
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
                         StrictMode.setThreadPolicy(policy);
                         debug("making data");
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        //takes picture puts it into outputstream
-                        faceBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
 
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        //takes the pictures bytearray
+                        faceBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                        //compress the bytearray
                         byte[] byteArray = byteArrayOutputStream.toByteArray();
+                        //encode to string so that it can be sent via json
                         String encoded = Base64.getEncoder().encodeToString(byteArray);
 
                         //make json object 'data'
                         JSONObject jsonObject = new JSONObject();
+                        //set the image attribute, and the username attribute.
                         jsonObject.put("image", encoded);
+                        //username is retrieved from the @+id/username editText from fragment_home
                         jsonObject.put("user", username.getText().toString());
                         byte[] data = jsonObject.toString().getBytes("UTF-8");
 
-
-
+                        //make http connection
                         connection = (HttpURLConnection) new URL(url).openConnection();
-
                         connection.setRequestMethod("POST");
-
                         connection.setRequestProperty("Content-Type", "application/json");
-
                         connection.setRequestProperty("Content-Length", Integer.toString(data.length));
                         connection.setDoOutput(true);
-//                        debug(data);
+                        debug("writing to output stream");
                         connection.getOutputStream().write(data);
-                        debug("test after connection4");
+                        debug("Trying to get input stream");
                         InputStream inputStream = connection.getInputStream();
-                        debug(inputStream.toString());
-                        debug("test after connection5");
+                        debug("got input stream");
 
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
-
-
 
                 }
             }
@@ -147,9 +152,7 @@ public class HomeFragment extends Fragment {
         super.onStart();
         imgCapture= binding.capturedImage;
         final Button photoButton = binding.Photobutton;
-
         photoButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 requestPermissionsIfNecessary(currentActivity,new String[]{
@@ -157,15 +160,12 @@ public class HomeFragment extends Fragment {
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.INTERNET
                 });
-
             }
-
         });
 
         final Button UploadButton = binding.UpLoad;
 
         UploadButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 debug("button pressed");
@@ -176,7 +176,7 @@ public class HomeFragment extends Fragment {
 
 //                    URL url = null;
                     debug("image exists");
-                    String url = "http://10.0.2.2:5000/authenticate/type/picture";
+                    String url = "http://192.168.50.67:5000/authenticate/type/picture";
 //                    String url = "http://192.168.233.1:5000/authenticate/type/picture";
                     HttpURLConnection connection = null;
                     try {
@@ -200,6 +200,7 @@ public class HomeFragment extends Fragment {
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("image", encoded);
                         jsonObject.put("user", binding.username.getText().toString());
+                        debug(binding.username.getText().toString());
                         byte[] data = jsonObject.toString().getBytes("UTF-8");
 
 
@@ -212,12 +213,12 @@ public class HomeFragment extends Fragment {
 
                         connection.setRequestProperty("Content-Length", Integer.toString(data.length));
                         connection.setDoOutput(true);
-//                        debug(data);
+                        debug("writing upload to output");
                         connection.getOutputStream().write(data);
-                        debug("test after connection4");
+                        debug("getting upload return stream");
                         InputStream inputStream = connection.getInputStream();
                         debug(inputStream.toString());
-                        debug("test after connection5");
+                        debug("read upload input stream");
 
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
@@ -230,9 +231,26 @@ public class HomeFragment extends Fragment {
 
         });
 
+    }
 
+    /**
+     *
+     * @param loginStatus the Textview in fragment_home that displays the "accepted" or "denied" text. Is hidden by default.
+     * @param accepted Boolean which determines the contents of the text view
+     */
+    public void displayBanner(TextView loginStatus,Boolean accepted){
+        loginStatus.setVisibility(View.VISIBLE);
+
+        if(accepted){
+            loginStatus.setText("ACCEPTED");
+            loginStatus.setTextColor(Color.GREEN);
+        }else{
+            loginStatus.setText("DENIED");
+            loginStatus.setTextColor(Color.RED);
+        }
 
     }
+
 
 
     private File createTemporaryFile(String part, String ext) throws Exception
@@ -307,7 +325,7 @@ public class HomeFragment extends Fragment {
 
     public void debug(String msg){
         Log.e("picture",msg);
-        Toast.makeText(this.getContext(),msg,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this.getContext(),msg,Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -1,8 +1,8 @@
 """ CNN for network augmentation """
 import torch
 import torch.nn as nn
-from Backend.featureExtractionAndComparison.pocketBackbone.augment_cells import AugmentCell
-from Backend.featureExtractionAndComparison.pocketBackbone import ops
+from featureExtractionAndComparison.pocketBackbone.augment_cells import AugmentCell
+from featureExtractionAndComparison.pocketBackbone import ops
 import math
 import torch.nn.functional as F
 from torch.autograd import Variable

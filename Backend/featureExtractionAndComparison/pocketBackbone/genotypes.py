@@ -6,7 +6,7 @@
 from collections import namedtuple
 import torch
 import torch.nn as nn
-from Backend.featureExtractionAndComparison.pocketBackbone import ops
+from featureExtractionAndComparison.pocketBackbone import ops
 
 
 Genotype = namedtuple('Genotype', 'normal normal_concat reduce reduce_concat')

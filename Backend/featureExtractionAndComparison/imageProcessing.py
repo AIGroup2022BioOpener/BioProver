@@ -3,12 +3,12 @@ import cv2
 import numpy as np
 
 # PocketFace
-from Backend.featureExtractionAndComparison.pocketBackbone.augment_cnn import AugmentCNN
-import Backend.featureExtractionAndComparison.pocketBackbone.genotypes as gt
+from featureExtractionAndComparison.pocketBackbone.augment_cnn import AugmentCNN
+import featureExtractionAndComparison.pocketBackbone.genotypes as gt
 
 from skimage import transform
 from facenet_pytorch import MTCNN
-from Backend.featureExtractionAndComparison.crop import norm_crop
+from featureExtractionAndComparison.crop import norm_crop
 
 
 class ImageProcessing():
