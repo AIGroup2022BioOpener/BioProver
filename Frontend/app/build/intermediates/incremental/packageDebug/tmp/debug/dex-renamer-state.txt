@@ -1,14 +1,14 @@
-#Tue Jan 31 12:43:01 CET 2023
+#Tue Jan 31 22:18:49 CET 2023
 path.4=9/classes.dex
 path.3=6/classes.dex
 path.2=12/classes.dex
 path.1=0/classes.dex
 path.0=classes.dex
-base.4=E\:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\9\\classes.dex
-base.3=E\:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\6\\classes.dex
-base.2=E\:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\12\\classes.dex
-base.1=E\:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
-base.0=E\:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+base.4=C\:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\9\\classes.dex
+base.3=C\:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\6\\classes.dex
+base.2=C\:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\12\\classes.dex
+base.1=C\:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+base.0=C\:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 renamed.3=classes4.dex
 renamed.2=classes3.dex
 renamed.1=classes2.dex

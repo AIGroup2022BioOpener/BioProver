@@ -37,11 +37,13 @@ import com.example.bioprover.databinding.FragmentHomeBinding;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -85,7 +87,7 @@ public class HomeFragment extends Fragment {
 
         currentActivity=this.getActivity();
 
-        TextView loginStatus = (TextView) currentActivity.findViewById(R.id.login_status);
+
 
         //setting the button that opens the camera
         imgCapture= binding.capturedImage;
@@ -140,7 +142,7 @@ public class HomeFragment extends Fragment {
         enrollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (username.getText().toString().isEmpty()) {
+                if (username.getText().toString().isEmpty() && !username.getText().toString().equals("")) {
                     Toast.makeText(root.getContext(), "Please type in a username", Toast.LENGTH_SHORT).show();
                 } else if (faceBitmap == null ){
                     Toast.makeText(root.getContext(), "Please take a picture", Toast.LENGTH_SHORT).show();
@@ -150,10 +152,9 @@ public class HomeFragment extends Fragment {
                     debug("enrolling user");
                     try {
                         currentModel = binding.autoCompleteTextView.getText().toString();
-
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                         StrictMode.setThreadPolicy(policy);
-                        debug("making data");
+                        debug("making data for user"+ username.getText().toString());
 
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                         //takes the pictures bytearray
@@ -178,9 +179,13 @@ public class HomeFragment extends Fragment {
                         connection.setRequestProperty("Content-Length", Integer.toString(data.length));
                         connection.setDoOutput(true);
                         debug("writing to output stream");
+
                         connection.getOutputStream().write(data);
                         debug("Trying to get input stream");
                         InputStream inputStream = connection.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                        String response = reader.readLine();
+                        System.out.println("Response from server: " + response);
                         debug("got input stream");
 
                     } catch (MalformedURLException e) {

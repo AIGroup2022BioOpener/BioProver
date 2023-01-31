@@ -1,16 +1,13 @@
-com/example/bioprover/BuildConfig.java
- com.example.bioprover.BuildConfig
 com/example/bioprover/databinding/FragmentHomeBinding.java
  com.example.bioprover.databinding.FragmentHomeBinding
 com/example/bioprover/MainActivity.java
  com.example.bioprover.MainActivity
-com/example/bioprover/ui/home/HomeFragment.java
- com.example.bioprover.ui.home.HomeFragment
- com.example.bioprover.ui.home.HomeFragment$1
- com.example.bioprover.ui.home.HomeFragment$2
- com.example.bioprover.ui.home.HomeFragment$3
+com/example/bioprover/databinding/FragmentDashboardBinding.java
+ com.example.bioprover.databinding.FragmentDashboardBinding
 com/example/bioprover/databinding/DropdownItemBinding.java
  com.example.bioprover.databinding.DropdownItemBinding
+com/example/bioprover/BuildConfig.java
+ com.example.bioprover.BuildConfig
 com/example/bioprover/databinding/ActivityHomeBinding.java
  com.example.bioprover.databinding.ActivityHomeBinding
 com/example/bioprover/databinding/FragmentNotificationsBinding.java
@@ -20,5 +17,8 @@ com/example/bioprover/databinding/ActivityMainBinding.java
 com/example/bioprover/HomeActivity.java
  com.example.bioprover.HomeActivity
  com.example.bioprover.HomeActivity$1
-com/example/bioprover/databinding/FragmentDashboardBinding.java
- com.example.bioprover.databinding.FragmentDashboardBinding
+com/example/bioprover/ui/home/HomeFragment.java
+ com.example.bioprover.ui.home.HomeFragment
+ com.example.bioprover.ui.home.HomeFragment$1
+ com.example.bioprover.ui.home.HomeFragment$2
+ com.example.bioprover.ui.home.HomeFragment$3
