@@ -44,6 +44,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 
@@ -80,15 +81,56 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         currentActivity=this.getActivity();
-        final Button enrollBtn = binding.Enroll;
-        final EditText username = binding.username;
+
         TextView loginStatus = (TextView) currentActivity.findViewById(R.id.login_status);
 
-        /**
-         * OnClick functionality for the enroll button.
-         * Requires photo to be taken first.
-         * Takes the image, transforms it into byte array, then processes the result.
-         */
+        //setting the button that opens the camera
+        imgCapture= binding.capturedImage;
+        final Button photoButton = binding.Photobutton;
+        setCameraButton(photoButton);
+
+        //setting the button that implements the functionality which sends the image to the server to add a new user
+        final Button enrollBtn = binding.Enroll;
+        final EditText username = binding.username;
+        setEnrolButton(enrollBtn,username,root);
+
+        //setting the button that implents the functionality which uploads a file to the server, and checks for matches
+        final Button UploadButton = binding.UpLoad;
+        setuploadButton(UploadButton);
+
+        return root;
+    }
+
+    /**
+     * Setting the button which opens the camera
+     * this method sets the required permissions
+     * @param photoButton
+     */
+    public void setCameraButton(Button photoButton){
+        photoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestPermissionsIfNecessary(currentActivity,new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.INTERNET
+                });
+            }
+        });
+    }
+
+
+    /**
+     * OnClick functionality for the enroll button.
+     * Requires photo to be taken first.
+     * Takes the image, transforms it into byte array, puts it into an json object, which is sent via http.
+     * The server tries to add the user, and sends a response if the enrollment was sucessfull
+     * @param enrollBtn fragmenthome -> id/Enroll
+     * @param username fragmenthome -> id/username
+     * @param root fragmenthome
+     */
+    public void setEnrolButton(Button enrollBtn, EditText username,View root){
+
         enrollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,7 +161,7 @@ public class HomeFragment extends Fragment {
                         jsonObject.put("image", encoded);
                         //username is retrieved from the @+id/username editText from fragment_home
                         jsonObject.put("user", username.getText().toString());
-                        byte[] data = jsonObject.toString().getBytes("UTF-8");
+                        byte[] data = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
 
                         //make http connection
                         connection = (HttpURLConnection) new URL(url).openConnection();
@@ -143,28 +185,17 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-        return root;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        imgCapture= binding.capturedImage;
-        final Button photoButton = binding.Photobutton;
-        photoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestPermissionsIfNecessary(currentActivity,new String[]{
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.INTERNET
-                });
-            }
-        });
 
-        final Button UploadButton = binding.UpLoad;
-
+    /**
+     * OnClick functionality for the Upload button.
+     * Requires picture to be taken first.
+     * Takes the image, transforms it into byte array, puts it into an json object, which is sent via http.
+     * The server tries to authenticate the user, and sends a response if the authentication was sucessfull
+     * @param UploadButton
+     */
+    public void setuploadButton(Button  UploadButton){
         UploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,63 +205,52 @@ public class HomeFragment extends Fragment {
                     return;
                 }
 
-//                    URL url = null;
-                    debug("image exists");
-                    String url = "http://192.168.50.67:5000/authenticate/type/picture";
+                debug("image exists");
+                String url = "http://192.168.50.67:5000/authenticate/type/picture";
 //                    String url = "http://192.168.233.1:5000/authenticate/type/picture";
-                    HttpURLConnection connection = null;
-                    try {
-//                        url = new URL("http://10.0.2.2:5000/authenticate/type/picture");
+                HttpURLConnection connection = null;
+                try {
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    debug("making data");
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    //takes picture puts it into outputstream
+                    pictureTake.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream.toByteArray();
+                    String encoded = Base64.getEncoder().encodeToString(byteArray);
+                    //make json object 'data'
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("image", encoded);
+                    jsonObject.put("user", binding.username.getText().toString());
+                    debug(binding.username.getText().toString());
+                    byte[] data = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
+                    connection = (HttpURLConnection) new URL(url).openConnection();
+                    connection.setRequestMethod("POST");
+                    connection.setRequestProperty("Content-Type", "application/json");
+                    connection.setRequestProperty("Content-Length", Integer.toString(data.length));
+                    connection.setDoOutput(true);
+                    debug("writing upload to output");
+                    connection.getOutputStream().write(data);
+                    debug("getting upload return stream");
+                    InputStream inputStream = connection.getInputStream();
+                    debug(inputStream.toString());
+                    debug("read upload input stream");
 
-                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-                        StrictMode.setThreadPolicy(policy);
-//                        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-//                        String base64 = Base64.getEncoder().encodeToString(array);
-                        debug("making data");
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        //takes picture puts it into outputstream
-                        pictureTake.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-
-                        byte[] byteArray = byteArrayOutputStream.toByteArray();
-                        String encoded = Base64.getEncoder().encodeToString(byteArray);
-
-                        //make json object 'data'
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("image", encoded);
-                        jsonObject.put("user", binding.username.getText().toString());
-                        debug(binding.username.getText().toString());
-                        byte[] data = jsonObject.toString().getBytes("UTF-8");
-
-
-
-                        connection = (HttpURLConnection) new URL(url).openConnection();
-
-                        connection.setRequestMethod("POST");
-
-                        connection.setRequestProperty("Content-Type", "application/json");
-
-                        connection.setRequestProperty("Content-Length", Integer.toString(data.length));
-                        connection.setDoOutput(true);
-                        debug("writing upload to output");
-                        connection.getOutputStream().write(data);
-                        debug("getting upload return stream");
-                        InputStream inputStream = connection.getInputStream();
-                        debug(inputStream.toString());
-                        debug("read upload input stream");
-
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
-                    }
-                    //executePytorch();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
                 }
+                //executePytorch();
+            }
 
 
         });
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     /**
