@@ -7,9 +7,6 @@
     tools:context=".ui.home.HomeFragment">
 
 
-
-
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Enroll"
         android:layout_width="wrap_content"
