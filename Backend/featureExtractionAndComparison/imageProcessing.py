@@ -1,31 +1,39 @@
 import torch
 import cv2
 import numpy as np
+from pathlib import Path
 
 # PocketFace
-from featureExtractionAndComparison.pocketBackbone.augment_cnn import AugmentCNN
-import featureExtractionAndComparison.pocketBackbone.genotypes as gt
+from Backend.featureExtractionAndComparison.pocketBackbone.augment_cnn import AugmentCNN
+import Backend.featureExtractionAndComparison.pocketBackbone.genotypes as gt
+from Backend.server.main import Model
+
+# ElasticFace
+from Backend.featureExtractionAndComparison.elasticBackbone.iresnet import iresnet100
 
 from skimage import transform
 from facenet_pytorch import MTCNN
-from featureExtractionAndComparison.crop import norm_crop
+from Backend.featureExtractionAndComparison.crop import norm_crop
 
 
-class ImageProcessing():
-    def __init__(self, threshold, model_path):
-        self.model = self.load_model(model_path)
+class ImageProcessing:
+    def __init__(self, threshold, model_path, model_type):
+        self.model = self.load_model(model_path, model_type)
         self.threshold = threshold
 
-    #TODO write cleaner
-    def load_model(self, pocket_model_path):
-        # PocketFace
-        genotype = gt.from_str("Genotype(normal=[[('dw_conv_3x3', 0), ('dw_conv_1x1', 1)], [('dw_conv_3x3', 2), ('dw_conv_5x5', 0)], [('dw_conv_3x3', 3), ('dw_conv_3x3', 0)], [('dw_conv_3x3', 4), ('skip_connect', 0)]], normal_concat=range(2, 6), reduce=[[('dw_conv_3x3', 1), ('dw_conv_7x7', 0)], [('skip_connect', 2), ('dw_conv_5x5', 1)], [('max_pool_3x3', 0), ('skip_connect', 2)], [('max_pool_3x3', 0), ('max_pool_3x3', 1)]], reduce_concat=range(2, 6))")
+    def load_model(self, model_type, model_path):
+        if model_type == Model.ELASTIC_FACE:
+            model = iresnet100(num_features=512).to("cpu") # Create model
+            model.load_state_dict(torch.load(model, map_location=torch.device("cpu"))) # Load parameters
+            model.train(False) # Set model to inference mode and disable training
+        else:
+            genotype = gt.from_str("Genotype(normal=[[('dw_conv_3x3', 0), ('dw_conv_1x1', 1)], [('dw_conv_3x3', 2), ('dw_conv_5x5', 0)], [('dw_conv_3x3', 3), ('dw_conv_3x3', 0)], [('dw_conv_3x3', 4), ('skip_connect', 0)]], normal_concat=range(2, 6), reduce=[[('dw_conv_3x3', 1), ('dw_conv_7x7', 0)], [('skip_connect', 2), ('dw_conv_5x5', 1)], [('max_pool_3x3', 0), ('skip_connect', 2)], [('max_pool_3x3', 0), ('max_pool_3x3', 1)]], reduce_concat=range(2, 6))")
 
-        pocket_model = AugmentCNN(C=16, n_layers=18, genotype=genotype, stem_multiplier=4, emb=128).to("cpu")
-        pocket_model.load_state_dict(torch.load(pocket_model_path, map_location=torch.device("cpu")))
-        pocket_model.train(False)
+            model = AugmentCNN(C=16, n_layers=18, genotype=genotype, stem_multiplier=4, emb=128).to("cpu")
+            model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")))
+            model.train(False)
 
-        return pocket_model
+        return model
 
     # Detects the faces, crop and transform it
     def detect_face(self, cv2_image):
@@ -60,7 +68,7 @@ class ImageProcessing():
             feature = feature.flatten()
         return feature
 
-    # Takes an raw images and preprocesses it to be used by the model
+    # Takes a raw images and preprocesses it to be used by the model
     # (deprecated) WARNING: Might be different for different models (checked it's thesame for both of them.)
     def prepare_image(self, image):
         image_rbg = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # Convert to RGB
@@ -83,7 +91,7 @@ class ImageProcessing():
     # Preprocess image e.g Transformation
     # preprocess method is deprecated
     # exapmle: image = preprocess(image, bbox=boxes[0], landmark=facial5points, image_size=[112, 112])
-    def preprocess(self, bbox=None, landmark=None, image_size=[112, 112]):
+    def preprocess(self, landmark=None, image_size=[112, 112]):
         if landmark is not None:
             src = np.array([
                 [30.2946, 51.6963],
@@ -99,3 +107,11 @@ class ImageProcessing():
             M = tform.params[0:2, :]
 
             return cv2.warpAffine(self.image, M, (image_size[1], image_size[0]), borderValue=0.0)
+
+    @staticmethod
+    def get_model_params(model):
+        if model == Model.ELASTIC_FACE:
+            return {"path": Path("./ElasticFaceArc.pth"), "threshold": 0.16728267073631287}
+        else:
+            return {"path": Path("./PocketNetS.pth"), "threshold": 0.19586977362632751}
+

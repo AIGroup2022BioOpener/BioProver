@@ -31,14 +31,14 @@ app.run(debug=True, host=0.0.0.0)
 #### Test Api Calls
 Can be done with Postman
 
-*Endpoints:*
-- http://{localhost}:{port}/authenticate/type/picture
-1. http://127.0.0.1:5000/authenticate/type/picture
+**Endpoints:**
 
-- http://{localhost}:{port}/register
-2. http://127.0.0.1:5000/register
+*http://{localhost}:{port}/authenticate/type/picture*
+- http://127.0.0.1:5000/authenticate/type/picture
+- Input: {"user": "test", "image": base64String, "net": "String"}
 
-
-*Current Input (body):* 
+*http://{localhost}:{port}/register*
+- http://127.0.0.1:5000/register
 - {"user": "test", "image": base64String}
+
 
