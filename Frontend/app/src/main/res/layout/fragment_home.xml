@@ -134,7 +134,7 @@
         app:layout_constraintTop_toBottomOf="@id/modelLayout">
 
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/chip4"
+            android:id="@+id/evaluate_on_phone_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -145,6 +145,8 @@
             android:id="@+id/EvaluationLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#00FF00"
+            android:visibility="invisible"
             android:text="Evaluate on Phone"
             app:layout_constraintBottom_toBottomOf="@+id/chip4"
             app:layout_constraintEnd_toEndOf="parent"
@@ -182,6 +184,7 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:imeOptions="actionDone"
         app:endIconMode="clear_text"
         app:layout_constraintBottom_toTopOf="@+id/capturedImage"
         app:layout_constraintEnd_toEndOf="@id/guideline8"
@@ -192,6 +195,8 @@
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="text"
             android:text=""
             android:maxLength="20"
             android:textSize="14sp" />
@@ -238,4 +243,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="128dp"
+        android:layout_height="31dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text=""
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline7"
+        app:layout_constraintVertical_bias="0.897" />
 </androidx.constraintlayout.widget.ConstraintLayout>

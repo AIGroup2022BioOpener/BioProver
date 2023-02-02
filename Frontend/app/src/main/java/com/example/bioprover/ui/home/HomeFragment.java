@@ -5,15 +5,17 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.hardware.camera2.CameraCharacteristics;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +83,7 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -186,7 +189,7 @@ public class HomeFragment extends Fragment {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                         String response = reader.readLine();
                         System.out.println("Response from server: " + response);
-                        debug("got input stream");
+                        displayServerFeedback(response);
 
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
@@ -249,6 +252,10 @@ public class HomeFragment extends Fragment {
                     InputStream inputStream = connection.getInputStream();
                     debug(inputStream.toString());
                     debug("read upload input stream");
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    String response = reader.readLine();
+                    System.out.println("Response from server: " + response);
+                    displayServerFeedback(response);
 
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -260,6 +267,44 @@ public class HomeFragment extends Fragment {
 
 
         });
+    }
+
+
+    /**
+     * Creates a toast which tells the user what the response of the server was. changes color appropriatly, if it was a success or a failure
+     * @param msg the response of the sever
+     */
+    public void displayServerFeedback(String msg){
+        //creates toast with long display time
+        Toast toast = Toast.makeText(this.getContext(), "Denied", Toast.LENGTH_LONG);
+        LayoutInflater inflater = getLayoutInflater();
+
+        //toast layout is given in layout/toast_layout
+        View layout = inflater.inflate(R.layout.toast_layout,
+                (ViewGroup) getView().findViewById(R.id.toast_root_view));
+        TextView text = layout.findViewById(R.id.toast_text_view);
+
+        text.setTextColor(Color.WHITE);
+
+        toast.setView(layout);
+        toast.setGravity(Gravity.TOP, 0, (int) (-2 * getResources().getDisplayMetrics().density));
+
+        if(msg.contains("isSimilar")&&msg.contains("True")){
+            layout.setBackgroundResource(R.drawable.toast_background_green);
+            text.setText("Access Granted");
+        }else if(msg.contains("success")){
+            layout.setBackgroundResource(R.drawable.toast_background_green);
+            text.setText("Success");}else if(msg.contains("notExisting")){
+            layout.setBackgroundResource(R.drawable.toast_background_red);
+            text.setText("No User");
+        }else{
+            layout.setBackgroundResource(R.drawable.toast_background_red);
+            text.setText("Denied");
+        }
+        debug("message is"+ msg);
+        //sets color and shape depending on the server message. Shapes are in drawable/toast_background*
+        toast.show();
+
     }
 
     @Override
@@ -315,7 +360,10 @@ public class HomeFragment extends Fragment {
         }
         else{
             Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            cInt.putExtra("android.intent.extras.CAMERA_FACING", 1);
+            cInt.putExtra("android.intent.extras.CAMERA_FACING", CameraCharacteristics.LENS_FACING_FRONT);
+            cInt.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+            cInt.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+
             File photo=null;
 
             // place where to store camera taken picture

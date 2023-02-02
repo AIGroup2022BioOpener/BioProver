@@ -28,7 +28,7 @@
 17-->C:\Users\avux\StudioProjects\BioProver2\Frontend\app\src\main\AndroidManifest.xml:11:22-64
 18
 19    <application
-19-->C:\Users\avux\StudioProjects\BioProver2\Frontend\app\src\main\AndroidManifest.xml:13:5-49:19
+19-->C:\Users\avux\StudioProjects\BioProver2\Frontend\app\src\main\AndroidManifest.xml:13:5-51:19
 20        android:allowBackup="true"
 20-->C:\Users\avux\StudioProjects\BioProver2\Frontend\app\src\main\AndroidManifest.xml:14:9-35
 21        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
@@ -88,14 +88,16 @@
 51        </provider>
 52
 53        <activity
-53-->C:\Users\avux\StudioProjects\BioProver2\Frontend\app\src\main\AndroidManifest.xml:43:9-48:20
+53-->C:\Users\avux\StudioProjects\BioProver2\Frontend\app\src\main\AndroidManifest.xml:43:9-50:20
 54            android:name="com.example.bioprover.MainActivity"
 54-->C:\Users\avux\StudioProjects\BioProver2\Frontend\app\src\main\AndroidManifest.xml:44:13-41
 55            android:exported="false"
 55-->C:\Users\avux\StudioProjects\BioProver2\Frontend\app\src\main\AndroidManifest.xml:45:13-37
-56            android:label="@string/app_name" >
+56            android:label="@string/app_name"
 56-->C:\Users\avux\StudioProjects\BioProver2\Frontend\app\src\main\AndroidManifest.xml:46:13-45
-57        </activity>
-58    </application>
-59
-60</manifest>
+57            android:screenOrientation="portrait" >
+57-->C:\Users\avux\StudioProjects\BioProver2\Frontend\app\src\main\AndroidManifest.xml:47:13-49
+58        </activity>
+59    </application>
+60
+61</manifest>

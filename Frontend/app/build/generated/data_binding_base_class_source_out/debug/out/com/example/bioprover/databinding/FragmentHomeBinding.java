@@ -48,7 +48,7 @@ public final class FragmentHomeBinding implements ViewBinding {
   public final ImageView capturedImage;
 
   @NonNull
-  public final SwitchCompat chip4;
+  public final SwitchCompat evaluateOnPhoneChip;
 
   @NonNull
   public final Guideline guideline1;
@@ -87,17 +87,21 @@ public final class FragmentHomeBinding implements ViewBinding {
   public final TextInputLayout textInputLayout;
 
   @NonNull
+  public final TextView textView;
+
+  @NonNull
   public final TextInputEditText username;
 
   private FragmentHomeBinding(@NonNull ConstraintLayout rootView, @NonNull AppCompatButton Enroll,
       @NonNull TextView EvaluationLocation, @NonNull AppCompatButton Photobutton,
       @NonNull AppCompatButton UpLoad, @NonNull TextView appName,
       @NonNull AutoCompleteTextView autoCompleteTextView, @NonNull ImageView capturedImage,
-      @NonNull SwitchCompat chip4, @NonNull Guideline guideline1, @NonNull Guideline guideline2,
-      @NonNull Guideline guideline3, @NonNull Guideline guideline4, @NonNull Guideline guideline5,
-      @NonNull Guideline guideline6, @NonNull Guideline guideline7, @NonNull Guideline guideline8,
-      @NonNull Guideline guideline9, @NonNull LinearLayout linearLayout,
-      @NonNull TextInputLayout modelLayout, @NonNull TextInputLayout textInputLayout,
+      @NonNull SwitchCompat evaluateOnPhoneChip, @NonNull Guideline guideline1,
+      @NonNull Guideline guideline2, @NonNull Guideline guideline3, @NonNull Guideline guideline4,
+      @NonNull Guideline guideline5, @NonNull Guideline guideline6, @NonNull Guideline guideline7,
+      @NonNull Guideline guideline8, @NonNull Guideline guideline9,
+      @NonNull LinearLayout linearLayout, @NonNull TextInputLayout modelLayout,
+      @NonNull TextInputLayout textInputLayout, @NonNull TextView textView,
       @NonNull TextInputEditText username) {
     this.rootView = rootView;
     this.Enroll = Enroll;
@@ -107,7 +111,7 @@ public final class FragmentHomeBinding implements ViewBinding {
     this.appName = appName;
     this.autoCompleteTextView = autoCompleteTextView;
     this.capturedImage = capturedImage;
-    this.chip4 = chip4;
+    this.evaluateOnPhoneChip = evaluateOnPhoneChip;
     this.guideline1 = guideline1;
     this.guideline2 = guideline2;
     this.guideline3 = guideline3;
@@ -120,6 +124,7 @@ public final class FragmentHomeBinding implements ViewBinding {
     this.linearLayout = linearLayout;
     this.modelLayout = modelLayout;
     this.textInputLayout = textInputLayout;
+    this.textView = textView;
     this.username = username;
   }
 
@@ -192,9 +197,9 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.chip4;
-      SwitchCompat chip4 = rootView.findViewById(id);
-      if (chip4 == null) {
+      id = R.id.evaluate_on_phone_chip;
+      SwitchCompat evaluateOnPhoneChip = rootView.findViewById(id);
+      if (evaluateOnPhoneChip == null) {
         break missingId;
       }
 
@@ -270,6 +275,12 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.textView;
+      TextView textView = rootView.findViewById(id);
+      if (textView == null) {
+        break missingId;
+      }
+
       id = R.id.username;
       TextInputEditText username = rootView.findViewById(id);
       if (username == null) {
@@ -277,9 +288,9 @@ public final class FragmentHomeBinding implements ViewBinding {
       }
 
       return new FragmentHomeBinding((ConstraintLayout) rootView, Enroll, EvaluationLocation,
-          Photobutton, UpLoad, appName, autoCompleteTextView, capturedImage, chip4, guideline1,
-          guideline2, guideline3, guideline4, guideline5, guideline6, guideline7, guideline8,
-          guideline9, linearLayout, modelLayout, textInputLayout, username);
+          Photobutton, UpLoad, appName, autoCompleteTextView, capturedImage, evaluateOnPhoneChip,
+          guideline1, guideline2, guideline3, guideline4, guideline5, guideline6, guideline7,
+          guideline8, guideline9, linearLayout, modelLayout, textInputLayout, textView, username);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

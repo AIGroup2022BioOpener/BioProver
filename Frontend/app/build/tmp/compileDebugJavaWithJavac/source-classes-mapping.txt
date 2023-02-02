@@ -4,6 +4,8 @@ com/example/bioprover/MainActivity.java
  com.example.bioprover.MainActivity
 com/example/bioprover/databinding/FragmentDashboardBinding.java
  com.example.bioprover.databinding.FragmentDashboardBinding
+com/example/bioprover/databinding/ToastLayoutBinding.java
+ com.example.bioprover.databinding.ToastLayoutBinding
 com/example/bioprover/databinding/DropdownItemBinding.java
  com.example.bioprover.databinding.DropdownItemBinding
 com/example/bioprover/BuildConfig.java

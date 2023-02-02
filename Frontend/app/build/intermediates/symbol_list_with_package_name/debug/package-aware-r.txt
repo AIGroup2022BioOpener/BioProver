@@ -1795,6 +1795,8 @@ drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
 drawable splash_image
 drawable test_custom_background
+drawable toast_background_green
+drawable toast_background_red
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
 font poppins_medium
@@ -1965,6 +1967,7 @@ id end
 id endToStart
 id enterAlways
 id enterAlwaysCollapsed
+id evaluate_on_phone_chip
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
@@ -2210,6 +2213,7 @@ id textSpacerNoButtons
 id textSpacerNoTitle
 id textStart
 id textTop
+id textView
 id text_dashboard
 id text_input_end_icon
 id text_input_error_icon
@@ -2225,6 +2229,8 @@ id time
 id title
 id titleDividerNoCustom
 id title_template
+id toast_root_view
+id toast_text_view
 id toggle
 id top
 id topPanel
@@ -2412,6 +2418,7 @@ layout text_view_with_line_height_from_layout
 layout text_view_with_line_height_from_style
 layout text_view_with_theme_line_height
 layout text_view_without_line_height
+layout toast_layout
 menu bottom_nav_menu
 mipmap ic_launcher
 mipmap ic_launcher_foreground

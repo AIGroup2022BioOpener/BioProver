@@ -8,12 +8,12 @@
         "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\drawable-v24\\ic_launcher_foreground.xml"
     },
     {
-        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_logo.png.flat",
-        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\mipmap-mdpi\\ic_logo.png"
-    },
-    {
         "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\font_poppins_semi_bold.ttf.flat",
         "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\font\\poppins_semi_bold.ttf"
+    },
+    {
+        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_logo.png.flat",
+        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\mipmap-mdpi\\ic_logo.png"
     },
     {
         "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_logo.png.flat",
@@ -26,6 +26,10 @@
     {
         "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\drawable_ic_launcher_background.xml.flat",
         "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\layout_toast_layout.xml.flat",
+        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\layout\\toast_layout.xml"
     },
     {
         "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_home.xml.flat",
@@ -44,12 +48,12 @@
         "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\layout\\fragment_home.xml"
     },
     {
-        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\color_itembackground.xml.flat",
-        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\color\\itembackground.xml"
-    },
-    {
         "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_launcher.xml.flat",
         "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\color_itembackground.xml.flat",
+        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\color\\itembackground.xml"
     },
     {
         "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_logo_foreground.png.flat",
@@ -92,8 +96,16 @@
         "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_foreground.png"
     },
     {
+        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\drawable_toast_background_red.xml.flat",
+        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\drawable\\toast_background_red.xml"
+    },
+    {
         "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\drawable_ic_logo_with_background.xml.flat",
         "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\drawable\\ic_logo_with_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\drawable_toast_background_green.xml.flat",
+        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\drawable\\toast_background_green.xml"
     },
     {
         "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\res\\merged\\debug\\drawable_ic_dashboard_black_24dp.xml.flat",
