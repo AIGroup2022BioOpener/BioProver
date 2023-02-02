@@ -145,8 +145,6 @@
             android:id="@+id/EvaluationLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#00FF00"
-            android:visibility="invisible"
             android:text="Evaluate on Phone"
             app:layout_constraintBottom_toBottomOf="@+id/chip4"
             app:layout_constraintEnd_toEndOf="parent"
@@ -244,17 +242,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="128dp"
-        android:layout_height="31dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:text=""
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline7"
-        app:layout_constraintVertical_bias="0.897" />
+<!--    <TextView-->
+<!--        android:id="@+id/textView"-->
+<!--        android:layout_width="128dp"-->
+<!--        android:layout_height="31dp"-->
+<!--        android:layout_marginBottom="20dp"-->
+<!--        android:gravity="center"-->
+<!--        android:text=""-->
+<!--        android:textSize="20sp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/guideline3"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/guideline7"-->
+<!--        app:layout_constraintVertical_bias="0.897" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

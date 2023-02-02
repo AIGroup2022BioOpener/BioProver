@@ -6,7 +6,6 @@
 
     <string-array name="models">
         <item>PocketNet</item>
-        <item>MixFaceNets</item>
         <item>ElasticFace</item>
     </string-array>
 </resources>

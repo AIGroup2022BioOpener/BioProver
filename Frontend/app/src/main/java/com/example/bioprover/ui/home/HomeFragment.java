@@ -154,7 +154,8 @@ public class HomeFragment extends Fragment {
                     HttpURLConnection connection = null;
                     debug("enrolling user");
                     try {
-                        currentModel = binding.autoCompleteTextView.getText().toString();
+                        currentModel = binding.autoCompleteTextView.getText().toString() == "PocketNet"? "pocket": "elastic";
+
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                         StrictMode.setThreadPolicy(policy);
                         debug("making data for user"+ username.getText().toString());
@@ -173,7 +174,9 @@ public class HomeFragment extends Fragment {
                         jsonObject.put("image", encoded);
                         //username is retrieved from the @+id/username editText from fragment_home
                         jsonObject.put("user", username.getText().toString());
+                        jsonObject.put("net", currentModel);
                         byte[] data = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
+
 
                         //make http connection
                         connection = (HttpURLConnection) new URL(url).openConnection();
@@ -226,7 +229,7 @@ public class HomeFragment extends Fragment {
 //                    String url = "http://192.168.233.1:5000/authenticate/type/picture";
                 HttpURLConnection connection = null;
                 try {
-                    currentModel = binding.autoCompleteTextView.getText().toString();
+                    currentModel = binding.autoCompleteTextView.getText().toString() == "PocketNet"? "pocket": "elastic";
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                     StrictMode.setThreadPolicy(policy);
                     debug("making data");
@@ -239,6 +242,7 @@ public class HomeFragment extends Fragment {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("image", encoded);
                     jsonObject.put("user", binding.username.getText().toString());
+                    jsonObject.put("net", currentModel);
                     debug(binding.username.getText().toString());
                     byte[] data = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
                     connection = (HttpURLConnection) new URL(url).openConnection();
@@ -362,7 +366,7 @@ public class HomeFragment extends Fragment {
             Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             cInt.putExtra("android.intent.extras.CAMERA_FACING", CameraCharacteristics.LENS_FACING_FRONT);
             cInt.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
-            cInt.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+            cInt.putExtra("android.intent.extras.LENS_FACING_FRONT", CameraCharacteristics.LENS_FACING_FRONT);
 
             File photo=null;
 
