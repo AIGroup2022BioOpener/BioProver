@@ -43,12 +43,14 @@ class ImageProcessing:
         # Detect all faces in PIL image and return bounding boxes and optional facial landmarks.
         # given raw input images types: PIL image or list of PIL images, numpy.ndarray (uint8)
         boxes, probs, landmarks = mtcnn.detect(cv2_image, landmarks=True)
-        print("b", boxes, "p", probs, "l", landmarks)
-        facial5points = landmarks[0]
-
-        # transforms image to match the landmarks with reference landmarks
-        # returns the cropped and transformed image
-        return norm_crop(cv2_image, landmark=facial5points, image_size=112)
+        try:
+            print("b", boxes, "p", probs, "l", landmarks)
+            facial5points = landmarks[0]
+            # transforms image to match the landmarks with reference landmarks
+            # returns the cropped and transformed image
+            return norm_crop(cv2_image, landmark=facial5points, image_size=112)
+        except Exception:
+            print("ERROR: No face detected")
 
     def is_similar(self, emb_1, emb_2):
         cos_sim = self.cos_sim(emb_1, emb_2)
