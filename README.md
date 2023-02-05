@@ -36,6 +36,7 @@ Windows:
 set PYTHONPATH=%PYTHONPATH%;C:\path\to\your\project\
 
 ```
+
 Before starting the app, change the SDK path to your own path in the gradle scripts under local.properties
 
 
