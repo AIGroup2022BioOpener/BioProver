@@ -335,7 +335,11 @@ public class HomeFragment extends Fragment {
     }
 
 
-
+    /**
+     * create and preload a temp file location, to accept the picture taken from the camera
+     * @param part the temp file name. 
+     * @param ext what kind of data format the temp file should be
+     */
     private File createTemporaryFile(String part, String ext) throws Exception
     {
         File tempDir= currentActivity.getExternalFilesDir(null);
@@ -347,6 +351,13 @@ public class HomeFragment extends Fragment {
         }
         return File.createTempFile(part, ext, tempDir);
     }
+    
+    /**
+     * Ask the user for the premissions, if not all of the premission are premitted from the user side, it is recusive untill the user accept all of the permissions
+     * After the premission all accepted, call the take picute action to call up the camera.
+     * @param c the context of the permission, it is not necessary here, but you want to rewrite it in a helper function, it is necessary. 
+     * @param permissions which are needed, it is a list of permissions listed in https://developer.android.com/reference/android/Manifest.permission
+     */
     public void requestPermissionsIfNecessary(Activity c, String[] permissions) {
         ArrayList<String> permissionsToRequest = new ArrayList<>();
         for (String permission : permissions) {
@@ -384,6 +395,10 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * Get the picture from the temp file and show the preview on the screen. 
+     * @param imageView where to show the picture
+     */
 
     public Bitmap grabImage(ImageView imageView)
     {
@@ -413,7 +428,11 @@ public class HomeFragment extends Fragment {
         Log.e("picture",msg);
         //Toast.makeText(this.getContext(),msg,Toast.LENGTH_SHORT).show();
     }
-
+    /**
+     * requestCode
+     *      Image_Capture_Code
+     *          Successful:Call the grabImage to take the picture from the storage
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Image_Capture_Code) {
