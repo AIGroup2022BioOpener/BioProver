@@ -87,9 +87,6 @@ public final class FragmentHomeBinding implements ViewBinding {
   public final TextInputLayout textInputLayout;
 
   @NonNull
-  public final TextView textView;
-
-  @NonNull
   public final TextInputEditText username;
 
   private FragmentHomeBinding(@NonNull ConstraintLayout rootView, @NonNull AppCompatButton Enroll,
@@ -101,8 +98,7 @@ public final class FragmentHomeBinding implements ViewBinding {
       @NonNull Guideline guideline5, @NonNull Guideline guideline6, @NonNull Guideline guideline7,
       @NonNull Guideline guideline8, @NonNull Guideline guideline9,
       @NonNull LinearLayout linearLayout, @NonNull TextInputLayout modelLayout,
-      @NonNull TextInputLayout textInputLayout, @NonNull TextView textView,
-      @NonNull TextInputEditText username) {
+      @NonNull TextInputLayout textInputLayout, @NonNull TextInputEditText username) {
     this.rootView = rootView;
     this.Enroll = Enroll;
     this.EvaluationLocation = EvaluationLocation;
@@ -124,7 +120,6 @@ public final class FragmentHomeBinding implements ViewBinding {
     this.linearLayout = linearLayout;
     this.modelLayout = modelLayout;
     this.textInputLayout = textInputLayout;
-    this.textView = textView;
     this.username = username;
   }
 
@@ -275,12 +270,6 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.textView;
-      TextView textView = rootView.findViewById(id);
-      if (textView == null) {
-        break missingId;
-      }
-
       id = R.id.username;
       TextInputEditText username = rootView.findViewById(id);
       if (username == null) {
@@ -290,7 +279,7 @@ public final class FragmentHomeBinding implements ViewBinding {
       return new FragmentHomeBinding((ConstraintLayout) rootView, Enroll, EvaluationLocation,
           Photobutton, UpLoad, appName, autoCompleteTextView, capturedImage, evaluateOnPhoneChip,
           guideline1, guideline2, guideline3, guideline4, guideline5, guideline6, guideline7,
-          guideline8, guideline9, linearLayout, modelLayout, textInputLayout, textView, username);
+          guideline8, guideline9, linearLayout, modelLayout, textInputLayout, username);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -1,30 +1,30 @@
 [
     {
-        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\fragment_dashboard.xml",
-        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\layout\\fragment_dashboard.xml"
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\fragment_notifications.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\fragment_notifications.xml"
     },
     {
-        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\fragment_home.xml",
-        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\layout\\fragment_home.xml"
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\dropdown_item.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\dropdown_item.xml"
     },
     {
-        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\fragment_notifications.xml",
-        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\layout\\fragment_notifications.xml"
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_home.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\activity_home.xml"
     },
     {
-        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_home.xml",
-        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\layout\\activity_home.xml"
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_main.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_main.xml",
-        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\layout\\activity_main.xml"
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\fragment_home.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\fragment_home.xml"
     },
     {
-        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\dropdown_item.xml",
-        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\layout\\dropdown_item.xml"
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\fragment_dashboard.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\fragment_dashboard.xml"
     },
     {
-        "merged": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\toast_layout.xml",
-        "source": "C:\\Users\\avux\\StudioProjects\\BioProver2\\Frontend\\app\\src\\main\\res\\layout\\toast_layout.xml"
+        "merged": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\toast_layout.xml",
+        "source": "E:\\Uni\\Semester 7\\Ambient Intelligence\\BioProver\\Frontend\\app\\src\\main\\res\\layout\\toast_layout.xml"
     }
 ]

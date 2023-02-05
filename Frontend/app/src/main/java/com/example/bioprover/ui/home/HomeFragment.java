@@ -35,6 +35,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.bioprover.R;
 import com.example.bioprover.databinding.FragmentHomeBinding;
+import com.google.android.material.textfield.TextInputEditText;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -67,20 +68,23 @@ import org.pytorch.torchvision.TensorImageUtils;
 
 public class HomeFragment extends Fragment {
 
-    Bitmap pictureTake=null;
     private FragmentHomeBinding binding;
     private ImageView imgCapture;
     private static final int Image_Capture_Code = 121;
     private final static int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private Uri mImageUri;
-    private Bitmap faceBitmap;
+    private Bitmap faceBitmap = null;
     private String currentModel;
+    private Activity currentActivity = null;
 
 
-
-
-    private Activity currentActivity=null;
-
+    /**
+     * created the view
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -88,26 +92,21 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        currentActivity=this.getActivity();
-
-
+        currentActivity = this.getActivity();
 
         //setting the button that opens the camera
         imgCapture= binding.capturedImage;
         final Button photoButton = binding.Photobutton;
         setCameraButton(photoButton);
 
-        //setting the button that implements the functionality which sends the image to the server to add a new user
-        String[] visibilities = getResources().getStringArray(R.array.models);
-
-        currentActivity = this.getActivity();
+        //setting the button that implements the functionality which uploads a file to the server and therefore enrolls a new user
         final Button enrollBtn = binding.Enroll;
-        final EditText username = binding.username;
-        setEnrolButton(enrollBtn,username,root);
+        final TextInputEditText username = binding.username;
+        setEnrollButton(enrollBtn,username,root);
 
-        //setting the button that implents the functionality which uploads a file to the server, and checks for matches
+        //setting the button that implements the functionality which uploads a file to the server, and checks for matches
         final Button UploadButton = binding.UpLoad;
-        setuploadButton(UploadButton);
+        setUploadButton(UploadButton);
 
         return root;
     }
@@ -140,70 +139,99 @@ public class HomeFragment extends Fragment {
      * @param username fragmenthome -> id/username
      * @param root fragmenthome
      */
-    public void setEnrolButton(Button enrollBtn, EditText username,View root){
+    public void setEnrollButton(Button enrollBtn, TextInputEditText username,View root){
 
         enrollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (username.getText().toString().isEmpty() && !username.getText().toString().equals("")) {
+                // check if username is typed in
+                if (username.getText().toString().isEmpty()) {
                     Toast.makeText(root.getContext(), "Please type in a username", Toast.LENGTH_SHORT).show();
+
+                // check if picture was taken
                 } else if (faceBitmap == null ){
                     Toast.makeText(root.getContext(), "Please take a picture", Toast.LENGTH_SHORT).show();
+
+                // check if picture was taken and username is typed in
                 } else if (!username.getText().toString().isEmpty() && faceBitmap != null) {
                     String url = "http://192.168.50.67:5000/register";
-                    HttpURLConnection connection = null;
                     debug("enrolling user");
-                    try {
-                        currentModel = binding.autoCompleteTextView.getText().toString() == "PocketNet"? "pocket": "elastic";
 
-                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                        StrictMode.setThreadPolicy(policy);
-                        debug("making data for user"+ username.getText().toString());
-
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        //takes the pictures bytearray
-                        faceBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                        //compress the bytearray
-                        byte[] byteArray = byteArrayOutputStream.toByteArray();
-                        //encode to string so that it can be sent via json
-                        String encoded = Base64.getEncoder().encodeToString(byteArray);
-
-                        //make json object 'data'
-                        JSONObject jsonObject = new JSONObject();
-                        //set the image attribute, and the username attribute.
-                        jsonObject.put("image", encoded);
-                        //username is retrieved from the @+id/username editText from fragment_home
-                        jsonObject.put("user", username.getText().toString());
-                        jsonObject.put("net", currentModel);
-                        byte[] data = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
-
-
-                        //make http connection
-                        connection = (HttpURLConnection) new URL(url).openConnection();
-                        connection.setRequestMethod("POST");
-                        connection.setRequestProperty("Content-Type", "application/json");
-                        connection.setRequestProperty("Content-Length", Integer.toString(data.length));
-                        connection.setDoOutput(true);
-                        debug("writing to output stream");
-
-                        connection.getOutputStream().write(data);
-                        debug("Trying to get input stream");
-                        InputStream inputStream = connection.getInputStream();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                        String response = reader.readLine();
-                        System.out.println("Response from server: " + response);
-                        displayServerFeedback(response);
-
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
-                    }
+                    // send Data to Backend and get Response
+                    sendingDataToBackEnd(url);
 
                 }
             }
         });
 
+    }
+
+    /**
+     * sends the Data to backend given the corresponding url for either enrolling the user or uploading the picture
+     * @param url
+     */
+    private void sendingDataToBackEnd(String url) {
+        try {
+            HttpURLConnection connection = null;
+            currentModel = binding.autoCompleteTextView.getText().toString() == "PocketNet"? "pocket": "elastic";
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            //takes the pictures bytearray
+            faceBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream); //enroll
+
+            //compress the bytearray
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            //encode to string so that it can be sent via json
+            String encoded = Base64.getEncoder().encodeToString(byteArray);
+
+            //make json object 'data'
+            JSONObject jsonObject = new JSONObject();
+            //set the image attribute, and the username attribute.
+            jsonObject.put("image", encoded);
+            //username is retrieved from the @+id/username editText from fragment_home
+            jsonObject.put("user", binding.username.getText().toString());
+            //model to be executed ist retrieved from dropdownbox
+            jsonObject.put("net", currentModel);
+
+            byte[] data = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
+
+            //make http connection
+            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Content-Length", Integer.toString(data.length));
+            connection.setDoOutput(true);
+
+            // get Output stream
+            debug("writing to output stream");
+            connection.getOutputStream().write(data);
+
+            InputStream inputStream = null;
+            if (url.contains("register")) {
+                debug("Trying to get input stream");
+                inputStream = connection.getInputStream();
+            } else if (url.contains("picture")) {
+                debug("getting upload return stream");
+                inputStream = connection.getInputStream();
+                debug(inputStream.toString());
+                debug("read upload input stream");
+            }
+
+            // output server response
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String response = reader.readLine();
+            System.out.println("Response from server: " + response);
+            displayServerFeedback(response);
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -214,62 +242,30 @@ public class HomeFragment extends Fragment {
      * The server tries to authenticate the user, and sends a response if the authentication was sucessfull
      * @param UploadButton
      */
-    public void setuploadButton(Button  UploadButton){
+    public void setUploadButton(Button  UploadButton){
         UploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 debug("button pressed");
-                if (imgCapture.getDrawable() == null || binding.username.getText().toString().isEmpty()){
-                    debug("No Image || no username");
+
+                if (imgCapture.getDrawable() == null) {
+                    Toast.makeText(binding.getRoot().getContext(), "Please take a picture of yourself", Toast.LENGTH_SHORT).show();
+                    debug("No Image");
+                    return;
+
+                } else if (binding.username.getText().toString().isEmpty()) {
+                    Toast.makeText(binding.getRoot().getContext(), "Please type in a username", Toast.LENGTH_SHORT).show();
+                    debug("no username");
                     return;
                 }
-
                 debug("image exists");
                 String url = "http://192.168.50.67:5000/authenticate/type/picture";
-//                    String url = "http://192.168.233.1:5000/authenticate/type/picture";
-                HttpURLConnection connection = null;
-                try {
-                    currentModel = binding.autoCompleteTextView.getText().toString() == "PocketNet"? "pocket": "elastic";
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-                    debug("making data");
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    //takes picture puts it into outputstream
-                    pictureTake.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                    byte[] byteArray = byteArrayOutputStream.toByteArray();
-                    String encoded = Base64.getEncoder().encodeToString(byteArray);
-                    //make json object 'data'
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("image", encoded);
-                    jsonObject.put("user", binding.username.getText().toString());
-                    jsonObject.put("net", currentModel);
-                    debug(binding.username.getText().toString());
-                    byte[] data = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
-                    connection = (HttpURLConnection) new URL(url).openConnection();
-                    connection.setRequestMethod("POST");
-                    connection.setRequestProperty("Content-Type", "application/json");
-                    connection.setRequestProperty("Content-Length", Integer.toString(data.length));
-                    connection.setDoOutput(true);
-                    debug("writing upload to output");
-                    connection.getOutputStream().write(data);
-                    debug("getting upload return stream");
-                    InputStream inputStream = connection.getInputStream();
-                    debug(inputStream.toString());
-                    debug("read upload input stream");
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                    String response = reader.readLine();
-                    System.out.println("Response from server: " + response);
-                    displayServerFeedback(response);
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                }
+//              String url = "http://192.168.233.1:5000/authenticate/type/picture";
                 //executePytorch();
+
+                // send Data to Backend and get Response
+                sendingDataToBackEnd(url);
             }
-
-
         });
     }
 
@@ -399,7 +395,6 @@ public class HomeFragment extends Fragment {
      * Get the picture from the temp file and show the preview on the screen. 
      * @param imageView where to show the picture
      */
-
     public Bitmap grabImage(ImageView imageView)
     {
         this.getActivity().getContentResolver().notifyChange(mImageUri, null);
@@ -414,31 +409,38 @@ public class HomeFragment extends Fragment {
         {
 
         }
-        this.faceBitmap=bitmap;
-
         return bitmap;
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
+    /**
+     * Output log
+     * @param msg
+     */
     public void debug(String msg){
         Log.e("picture",msg);
         //Toast.makeText(this.getContext(),msg,Toast.LENGTH_SHORT).show();
     }
+
     /**
      * requestCode
-     *      Image_Capture_Code
-     *          Successful:Call the grabImage to take the picture from the storage
+     * Image_Capture_Code
+     * Successful:Call the grabImage to take the picture from the storage
+     * @param requestCode
+     * @param resultCode
+     * @param data
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Image_Capture_Code) {
             if (resultCode == RESULT_OK) {
                 //... some code to inflate/create/find appropriate ImageView to place grabbed image
-                pictureTake=this.grabImage(imgCapture);
+                this.faceBitmap = this.grabImage(imgCapture);
                 Log.e("picture","okay");
             } else if (resultCode == RESULT_CANCELED) {
                 Log.e("picture","Failes");
@@ -452,7 +454,10 @@ public class HomeFragment extends Fragment {
         //executePytorch(); //TODO:reactivate
     }
 
-
+    /**
+     * process picture on frontend side
+     * @return
+     */
     public float[] executePytorch() {
         debug("running model");
         Bitmap bitmap = null;
@@ -500,6 +505,13 @@ public class HomeFragment extends Fragment {
 
     }
 
+    /**
+     * helping method for executing Pytorch
+     * @param context
+     * @param assetName
+     * @return
+     * @throws IOException
+     */
     public static String assetFilePath(Context context, String assetName) throws IOException {
         File file = new File(context.getFilesDir(), assetName);
         if (file.exists() && file.length() > 0) {
@@ -518,17 +530,21 @@ public class HomeFragment extends Fragment {
             return file.getAbsolutePath();
         }
     }
+
+    /**
+     * takes care of displaying models on dropdownmenu
+     */
     @Override
     public void onResume() {
         super.onResume();
 
-        //Visibilies are the different polling types
-        String[] visibilities = getResources().getStringArray(R.array.models);
+        //different available models
+        String[] models = getResources().getStringArray(R.array.models);
 
-        //Creates an Array Adapter with the visibilities
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getContext(), R.layout.dropdown_item, visibilities);
+        //Creates an Array Adapter with the models
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getContext(), R.layout.dropdown_item, models);
 
-        //Gets the view of the drop down menu with the different visibilities
+        //Gets the view of the drop down menu with the different models
         AutoCompleteTextView dropDownMenu = getView().findViewById(R.id.autoCompleteTextView);
 
         //Sets the created Array Adapter to the Dropdown Menu
