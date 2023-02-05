@@ -2,6 +2,20 @@
 
 ## Backend
 
+The backend uses ElasticFace and PocketFace models to do face recognition, mainly divided into the following steps: 
+- Image loading
+- Face detection, including face cropping and saving images cropped
+- Model loading, feature vectors creation and embed based on ElasticFace/PocketFace model
+- Image similarity calculation
+- Set the threshold and Does the actually matching in a Verification scenario 
+
+### Instructions for use
+
+#### Model
+The Elastic model is too big to transfer to github, download "ElasticFaceArc.pth" from the Google Drive and put it in the root of the backend working path ```BioProver/Backend/featureExtractionAndComparison```
+
+[ElasticFaceArc.pth Download](https://drive.google.com/file/d/17MeoOkF7lnZMgi9bteN7SBr3MTr0Agdt/view)
+
 #### Requirements
 ```
 cd Backend
