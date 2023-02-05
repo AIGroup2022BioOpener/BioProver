@@ -4,7 +4,7 @@
 
 The backend uses ElasticFace and PocketFace models to do face recognition, which mainly divided into the following steps: 
 - Image loading
-- Face detection, including face cropping and saving images cropped. If no face is detected, an exception will be reported.
+- Face detection, including face cropping and saving images cropped. If no face is detected, an exception will be reported
 - Model loading, feature vectors creation and embed based on ElasticFace/PocketFace model
 - Image similarity calculation
 - Set the threshold and do the actually matching in a verification scenario 
