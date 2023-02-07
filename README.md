@@ -37,6 +37,10 @@ set PYTHONPATH=%PYTHONPATH%;C:\path\to\your\project\
 
 ```
 
+Before starting the app, change the SDK path to your own path in the gradle scripts under local.properties
+
+
+
 If the app shall be accessible within the network, set the host to 0.0.0.0
 ```
 app.run(debug=True, host=0.0.0.0)
