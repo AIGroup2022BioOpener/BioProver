@@ -168,12 +168,12 @@ public class HomeFragment extends Fragment {
 
     /**
      * sends the Data to backend given the corresponding url for either enrolling the user or uploading the picture
-     * @param url
+     * @param url the url to the server
      */
     private void sendingDataToBackEnd(String url) {
         try {
             HttpURLConnection connection = null;
-            currentModel = binding.autoCompleteTextView.getText().toString() == "PocketNet"? "pocket": "elastic";
+            currentModel = binding.autoCompleteTextView.getText().toString().equals("PocketNet") ? "pocket": "elastic";
 
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -208,7 +208,7 @@ public class HomeFragment extends Fragment {
             // get Output stream
             debug("writing to output stream");
             connection.getOutputStream().write(data);
-
+            System.out.println(currentModel);
             InputStream inputStream = null;
             if (url.contains("register")) {
                 debug("Trying to get input stream");

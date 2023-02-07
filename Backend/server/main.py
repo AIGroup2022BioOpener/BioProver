@@ -3,8 +3,8 @@ from flask_restful import Api
 from enum import Enum
 from pathlib import Path
 import cv2
-from Backend.featureExtractionAndComparison.imageProcessing import ImageProcessing
-from Backend.assets.pictureEncoding import PictureEncoding
+from featureExtractionAndComparison.imageProcessing import ImageProcessing
+from assets.pictureEncoding import PictureEncoding
 import os
 import json
 from cache import cache
@@ -71,11 +71,6 @@ def register():
         return json.dumps("success")
     except Exception as error:
         return json.dumps({'error': str(error)})
-
-
-class Model(Enum):
-    POCKET_NET = "pocket"
-    ELASTIC_FACE = "elastic"
 
 
 if __name__ == '__main__':
