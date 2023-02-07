@@ -4,28 +4,27 @@ import numpy as np
 from pathlib import Path
 
 # PocketFace
-from Backend.featureExtractionAndComparison.pocketBackbone.augment_cnn import AugmentCNN
-import Backend.featureExtractionAndComparison.pocketBackbone.genotypes as gt
-from Backend.server.main import Model
+from featureExtractionAndComparison.pocketBackbone.augment_cnn import AugmentCNN
+import featureExtractionAndComparison.pocketBackbone.genotypes as gt
 
 # ElasticFace
-from Backend.featureExtractionAndComparison.elasticBackbone.iresnet import iresnet100
+from featureExtractionAndComparison.elasticBackbone.iresnet import iresnet100
 
 from skimage import transform
 from facenet_pytorch import MTCNN
-from Backend.featureExtractionAndComparison.crop import norm_crop
+from featureExtractionAndComparison.crop import norm_crop
 
 
 class ImageProcessing:
     def __init__(self, threshold, model_path, model_type):
-        self.model = self.load_model(model_path, model_type)
+        self.model = self.load_model(model_path=model_path, model_type=model_type)
         self.threshold = threshold
 
     def load_model(self, model_type, model_path):
-        if model_type == Model.ELASTIC_FACE:
-            model = iresnet100(num_features=512).to("cpu") # Create model
-            model.load_state_dict(torch.load(model, map_location=torch.device("cpu"))) # Load parameters
-            model.train(False) # Set model to inference mode and disable training
+        if model_type == "elastic":
+            model = iresnet100(num_features=512).to("cpu")  # Create model
+            model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")))  # Load parameters
+            model.train(False)  # Set model to inference mode and disable training
         else:
             genotype = gt.from_str("Genotype(normal=[[('dw_conv_3x3', 0), ('dw_conv_1x1', 1)], [('dw_conv_3x3', 2), ('dw_conv_5x5', 0)], [('dw_conv_3x3', 3), ('dw_conv_3x3', 0)], [('dw_conv_3x3', 4), ('skip_connect', 0)]], normal_concat=range(2, 6), reduce=[[('dw_conv_3x3', 1), ('dw_conv_7x7', 0)], [('skip_connect', 2), ('dw_conv_5x5', 1)], [('max_pool_3x3', 0), ('skip_connect', 2)], [('max_pool_3x3', 0), ('max_pool_3x3', 1)]], reduce_concat=range(2, 6))")
 
@@ -44,7 +43,6 @@ class ImageProcessing:
         # given raw input images types: PIL image or list of PIL images, numpy.ndarray (uint8)
         boxes, probs, landmarks = mtcnn.detect(cv2_image, landmarks=True)
         try:
-            print("b", boxes, "p", probs, "l", landmarks)
             facial5points = landmarks[0]
             # transforms image to match the landmarks with reference landmarks
             # returns the cropped and transformed image
@@ -80,7 +78,7 @@ class ImageProcessing:
         aligned = torch.tensor(aligned).to("cpu") # Convert to tensor
         return aligned
 
-    #TODO maybe split evaluation into new class
+
     # Takes two feature vector and calculates the cosine similarity
     def cos_sim(self, reference, probe):
         reference_reshaped, probe_reshaped = reference.reshape(-1), probe.reshape(-1)
@@ -112,8 +110,8 @@ class ImageProcessing:
 
     @staticmethod
     def get_model_params(model):
-        if model == Model.ELASTIC_FACE:
-            return {"path": Path("./ElasticFaceArc.pth"), "threshold": 0.16728267073631287}
+        if model == "elastic":
+            return {"path": Path("../featureExtractionAndComparison/ElasticFaceArc.pth"), "threshold": 0.16728267073631287}
         else:
-            return {"path": Path("./PocketNetS.pth"), "threshold": 0.19586977362632751}
+            return {"path": Path("../featureExtractionAndComparison/PocketNetS.pth"), "threshold": 0.19586977362632751}
 
